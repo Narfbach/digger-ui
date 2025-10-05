@@ -1,7 +1,7 @@
 {
-  "name": "BiniLossless",
-  "short_name": "BiniLossless",
-  "description": "Lyrics-first Lossless client with karaoke-ready playback.",
+  "name": "Digger",
+  "short_name": "Digger",
+  "description": "High-fidelity music streaming with lossless quality.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#111827",

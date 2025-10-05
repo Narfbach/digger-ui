@@ -18,7 +18,7 @@
 	import type { Track, AudioQuality } from '$lib/types';
 
 	let { children, data } = $props();
-	const pageTitle = $derived(data?.title ?? 'BiniTidal');
+	const pageTitle = $derived(data?.title ?? 'Digger');
 	let headerHeight = $state(0);
 	let playerHeight = $state(0);
 	let viewportHeight = $state(0);

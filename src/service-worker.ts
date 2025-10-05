@@ -4,7 +4,7 @@ import { build, files, version } from '$service-worker';
 
 declare const self: ServiceWorkerGlobalScope;
 
-const CACHE_PREFIX = 'binitidal';
+const CACHE_PREFIX = 'digger';
 const CACHE_NAME = `${CACHE_PREFIX}-v${version}`;
 const ASSETS = [...build, ...files, '/offline.html'];
 
