@@ -9,10 +9,7 @@ const config = {
 	preprocess: vitePreprocess(),
 
 	kit: {
-		adapter: selectAdapter(),
-		paths: {
-			base: process.env.NODE_ENV === 'production' ? '/digger-ui' : ''
-		}
+		adapter: selectAdapter()
 	}
 };
 
