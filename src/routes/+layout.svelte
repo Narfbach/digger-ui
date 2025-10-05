@@ -296,7 +296,7 @@
 					typewriterTimeout = setTimeout(() => {
 						isDeleting = true;
 						typeWriter();
-					}, 2000);
+					}, 10000);
 				}
 			} else {
 				// Deleting
