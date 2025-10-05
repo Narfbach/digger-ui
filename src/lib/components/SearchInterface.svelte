@@ -347,55 +347,55 @@
 
 <div class="w-full">
 	<!-- Search Input -->
-	<div class="relative mb-6">
+	<div class="relative mb-8">
 		<input
 			type="text"
 			bind:value={query}
 			onkeypress={handleKeyPress}
-			placeholder="Search for anything..."
-			class="w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-3 pl-12 text-white transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+			placeholder="> SEARCH DATABASE_"
+			class="w-full border border-[#003311] bg-black px-4 py-3 pl-12 text-[#00ff41] font-mono placeholder:text-[#006622] transition-all focus:border-[#00ff41] focus:shadow-[0_0_15px_rgba(0,255,65,0.3)] focus:outline-none uppercase tracking-wider text-sm"
 		/>
-		<Search class="absolute top-1/2 left-4 -translate-y-1/2 text-gray-400" size={20} />
+		<Search class="absolute top-1/2 left-4 -translate-y-1/2 text-[#006622]" size={18} />
 		<button
 			onclick={handleSearch}
 			disabled={isLoading || !query.trim()}
-			class="absolute top-1/2 right-2 -translate-y-1/2 rounded-md bg-blue-600 px-4 py-1.5 text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+			class="absolute top-1/2 right-2 -translate-y-1/2 border border-[#00ff41] bg-[#001100] px-4 py-1.5 text-[#00ff41] text-xs font-mono transition-all hover:shadow-[0_0_10px_rgba(0,255,65,0.4)] disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:shadow-none uppercase tracking-wider"
 		>
-			{isLoading ? 'Searching...' : 'Search'}
+			{isLoading ? '[ SCANNING... ]' : '[ SEARCH ]'}
 		</button>
 	</div>
 
 	<!-- Tabs -->
-	<div class="mb-6 flex gap-2 overflow-auto border-b border-gray-700">
+	<div class="mb-8 flex gap-3 overflow-auto border-b border-[#003311]">
 		<button
 			onclick={() => handleTabChange('tracks')}
-			class="flex cursor-pointer items-center gap-2 border-b-2 px-4 py-2 transition-colors {activeTab ===
+			class="flex cursor-pointer items-center gap-2 border-b-2 px-4 py-2 transition-all font-mono text-xs uppercase tracking-widest {activeTab ===
 			'tracks'
-				? 'border-blue-500 text-blue-500'
-				: 'border-transparent text-gray-400 hover:text-white'}"
+				? 'border-[#00ff41] text-[#00ff41] shadow-[0_2px_10px_rgba(0,255,65,0.3)]'
+				: 'border-transparent text-[#006622] hover:text-[#00b82e] hover:border-[#006622]'}"
 		>
-			<Music size={18} />
-			Tracks
+			<Music size={16} />
+			TRACKS
 		</button>
 		<button
 			onclick={() => handleTabChange('albums')}
-			class="flex cursor-pointer items-center gap-2 border-b-2 px-4 py-2 transition-colors {activeTab ===
+			class="flex cursor-pointer items-center gap-2 border-b-2 px-4 py-2 transition-all font-mono text-xs uppercase tracking-widest {activeTab ===
 			'albums'
-				? 'border-blue-500 text-blue-500'
-				: 'border-transparent text-gray-400 hover:text-white'}"
+				? 'border-[#00ff41] text-[#00ff41] shadow-[0_2px_10px_rgba(0,255,65,0.3)]'
+				: 'border-transparent text-[#006622] hover:text-[#00b82e] hover:border-[#006622]'}"
 		>
-			<Disc size={18} />
-			Albums
+			<Disc size={16} />
+			ALBUMS
 		</button>
 		<button
 			onclick={() => handleTabChange('artists')}
-			class="flex cursor-pointer items-center gap-2 border-b-2 px-4 py-2 transition-colors {activeTab ===
+			class="flex cursor-pointer items-center gap-2 border-b-2 px-4 py-2 transition-all font-mono text-xs uppercase tracking-widest {activeTab ===
 			'artists'
-				? 'border-blue-500 text-blue-500'
-				: 'border-transparent text-gray-400 hover:text-white'}"
+				? 'border-[#00ff41] text-[#00ff41] shadow-[0_2px_10px_rgba(0,255,65,0.3)]'
+				: 'border-transparent text-[#006622] hover:text-[#00b82e] hover:border-[#006622]'}"
 		>
-			<User size={18} />
-			Artists
+			<User size={16} />
+			ARTISTS
 		</button>
 	</div>
 
@@ -404,14 +404,14 @@
 		{#if activeTab === 'tracks'}
 			<div class="space-y-2">
 				{#each trackSkeletons as _}
-					<div class="flex w-full items-center gap-3 rounded-lg bg-gray-800/70 p-3">
-						<div class="h-12 w-12 flex-shrink-0 animate-pulse rounded bg-gray-700/80"></div>
+					<div class="flex w-full items-center gap-3 border border-[#003311] bg-[#001100] p-3">
+						<div class="h-12 w-12 flex-shrink-0 animate-pulse bg-[#003311]"></div>
 						<div class="flex-1 space-y-2">
-							<div class="h-4 w-2/3 animate-pulse rounded bg-gray-700/80"></div>
-							<div class="h-3 w-1/3 animate-pulse rounded bg-gray-700/60"></div>
-							<div class="h-3 w-1/4 animate-pulse rounded bg-gray-700/40"></div>
+							<div class="h-3 w-2/3 animate-pulse bg-[#003311]"></div>
+							<div class="h-2 w-1/3 animate-pulse bg-[#002211]"></div>
+							<div class="h-2 w-1/4 animate-pulse bg-[#002211]"></div>
 						</div>
-						<div class="h-6 w-12 animate-pulse rounded-full bg-gray-700/80"></div>
+						<div class="h-5 w-12 animate-pulse bg-[#003311]"></div>
 					</div>
 				{/each}
 			</div>
@@ -419,9 +419,9 @@
 			<div class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
 				{#each gridSkeletons as _}
 					<div class="space-y-3">
-						<div class="aspect-square w-full animate-pulse rounded-lg bg-gray-800/70"></div>
-						<div class="h-4 w-3/4 animate-pulse rounded bg-gray-700/80"></div>
-						<div class="h-3 w-1/2 animate-pulse rounded bg-gray-700/60"></div>
+						<div class="aspect-square w-full animate-pulse border border-[#003311] bg-[#001100]"></div>
+						<div class="h-3 w-3/4 animate-pulse bg-[#003311]"></div>
+						<div class="h-2 w-1/2 animate-pulse bg-[#002211]"></div>
 					</div>
 				{/each}
 			</div>
@@ -429,9 +429,9 @@
 			<div class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
 				{#each gridSkeletons as _}
 					<div class="flex flex-col items-center gap-3">
-						<div class="aspect-square w-full animate-pulse rounded-full bg-gray-800/70"></div>
-						<div class="h-4 w-3/4 animate-pulse rounded bg-gray-700/80"></div>
-						<div class="h-3 w-1/2 animate-pulse rounded bg-gray-700/60"></div>
+						<div class="aspect-square w-full animate-pulse border border-[#003311] rounded-full bg-[#001100]"></div>
+						<div class="h-3 w-3/4 animate-pulse bg-[#003311]"></div>
+						<div class="h-2 w-1/2 animate-pulse bg-[#002211]"></div>
 					</div>
 				{/each}
 			</div>
