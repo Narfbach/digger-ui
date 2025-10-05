@@ -444,8 +444,8 @@
 
 	<!-- Error State -->
 	{#if error}
-		<div class="rounded-lg border border-red-900 bg-red-900/20 p-4 text-red-400">
-			{error}
+		<div class="border border-[#ff0033] bg-[#110000] p-4 text-[#ff0033] font-mono text-sm">
+			[ ERROR ] {error}
 		</div>
 	{/if}
 
@@ -459,17 +459,17 @@
 						tabindex="0"
 						onclick={() => handleTrackActivation(track)}
 						onkeydown={(event) => handleTrackKeydown(event, track)}
-						class="hover:bg-gray-750 group flex w-full cursor-pointer items-center gap-3 rounded-lg bg-gray-800 p-3 transition-colors focus:ring-2 focus:ring-blue-500 focus:outline-none"
+						class="group flex w-full cursor-pointer items-center gap-3 border border-[#003311] bg-[#001100] p-3 transition-all hover:border-[#00ff41] hover:shadow-[0_0_15px_rgba(0,255,65,0.2)] focus:ring-2 focus:ring-[#00ff41] focus:outline-none"
 					>
 						{#if track.album.cover}
 							<img
 								src={losslessAPI.getCoverUrl(track.album.cover, '160')}
 								alt={track.title}
-								class="h-12 w-12 rounded object-cover"
+								class="h-12 w-12 object-cover border border-[#003311]"
 							/>
 						{/if}
 						<div class="min-w-0 flex-1">
-							<h3 class="truncate font-semibold text-white group-hover:text-blue-400">
+							<h3 class="truncate font-mono text-sm font-semibold text-[#00ff41] group-hover:matrix-glow transition-all">
 								{track.title}
 								{#if track.explicit}
 									<svg
@@ -487,27 +487,27 @@
 									>
 								{/if}
 							</h3>
-							<p class="truncate text-sm text-gray-400">{track.artist.name}</p>
-							<p class="text-xs text-gray-500">
+							<p class="truncate text-xs text-[#00b82e] font-mono">{track.artist.name}</p>
+							<p class="text-[10px] text-[#006622] font-mono">
 								{track.album.title} • {formatQualityLabel(track.audioQuality)}
 							</p>
 						</div>
-						<div class="flex items-center gap-2 text-sm text-gray-400">
+						<div class="flex items-center gap-1 text-sm text-[#006622]">
 							<button
 								onclick={(event) => handlePlayNext(track, event)}
-								class="rounded-full p-2 text-gray-400 transition-colors hover:text-white"
+								class="p-2 text-[#006622] transition-all hover:text-[#00ff41]"
 								title="Play next"
 								aria-label={`Play ${track.title} next`}
 							>
-								<ListVideo size={18} />
+								<ListVideo size={16} />
 							</button>
 							<button
 								onclick={(event) => handleAddToQueue(track, event)}
-								class="rounded-full p-2 text-gray-400 transition-colors hover:text-white"
+								class="p-2 text-[#006622] transition-all hover:text-[#00ff41]"
 								title="Add to queue"
 								aria-label={`Add ${track.title} to queue`}
 							>
-								<ListPlus size={18} />
+								<ListPlus size={16} />
 							</button>
 							<button
 								onclick={(event) =>
@@ -515,7 +515,7 @@
 										? handleCancelDownload(track.id, event)
 										: handleDownload(track, event)
 								}
-								class="rounded-full p-2 text-gray-400 transition-colors hover:text-white"
+								class="p-2 text-[#006622] transition-all hover:text-[#00ff41]"
 								title={downloadingIds.has(track.id) ? 'Cancel download' : 'Download track'}
 								aria-label={downloadingIds.has(track.id) ? `Cancel download for ${track.title}` : `Download ${track.title}`}
 								aria-busy={downloadingIds.has(track.id)}
@@ -549,22 +549,22 @@
 						<button
 							onclick={(event) => handleAlbumDownloadClick(album, event)}
 							type="button"
-							class="absolute top-3 right-3 z-40 flex items-center justify-center rounded-full bg-black/50 p-2 text-gray-200 backdrop-blur-md transition-colors hover:bg-blue-600/80 hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+							class="absolute top-2 right-2 z-40 flex items-center justify-center border border-[#003311] bg-black/90 p-2 text-[#00ff41] backdrop-blur-md transition-all hover:border-[#00ff41] hover:shadow-[0_0_10px_rgba(0,255,65,0.4)] disabled:cursor-not-allowed disabled:opacity-40"
 							disabled={albumDownloadStates[album.id]?.downloading}
 							aria-label={`Download ${album.title}`}
 						>
 							{#if albumDownloadStates[album.id]?.downloading}
-								<LoaderCircle size={16} class="animate-spin" />
+								<LoaderCircle size={14} class="animate-spin" />
 							{:else}
-								<Download size={16} />
+								<Download size={14} />
 							{/if}
 						</button>
 						<button
 							onclick={() => onAlbumSelect?.(album)}
 							type="button"
-							class="flex w-full flex-col text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-900"
+							class="flex w-full flex-col text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00ff41] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
 						>
-							<div class="relative mb-2 aspect-square overflow-hidden rounded-lg">
+							<div class="relative mb-2 aspect-square overflow-hidden border border-[#003311] group-hover:border-[#00ff41] transition-all group-hover:shadow-[0_0_15px_rgba(0,255,65,0.2)]">
 								{#if album.cover}
 									<img
 										src={losslessAPI.getCoverUrl(album.cover, '640')}
@@ -573,13 +573,13 @@
 									/>
 								{:else}
 									<div
-										class="flex h-full w-full items-center justify-center bg-gray-800 text-sm text-gray-500"
+										class="flex h-full w-full items-center justify-center bg-[#001100] text-xs text-[#006622] font-mono"
 									>
-										No artwork
+										[ NO ART ]
 									</div>
 								{/if}
 							</div>
-							<h3 class="truncate font-semibold text-white group-hover:text-blue-400">
+							<h3 class="truncate font-mono text-sm font-semibold text-[#00ff41] group-hover:matrix-glow transition-all">
 								{album.title}
 								{#if album.explicit}
 									<svg
@@ -598,10 +598,10 @@
 								{/if}
 							</h3>
 							{#if album.artist}
-								<p class="truncate text-sm text-gray-400">{album.artist.name}</p>
+								<p class="truncate text-xs text-[#00b82e] font-mono">{album.artist.name}</p>
 							{/if}
 							{#if album.releaseDate}
-								<p class="text-xs text-gray-500">{album.releaseDate.split('-')[0]}</p>
+								<p class="text-[10px] text-[#006622] font-mono">{album.releaseDate.split('-')[0]}</p>
 							{/if}
 						</button>
 						{#if albumDownloadStates[album.id]?.downloading}
@@ -628,7 +628,7 @@
 			<div class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
 				{#each artists as artist}
 					<button onclick={() => onArtistSelect?.(artist)} class="group text-center">
-						<div class="relative mb-2 aspect-square overflow-hidden rounded-full">
+						<div class="relative mb-2 aspect-square overflow-hidden rounded-full border border-[#003311] group-hover:border-[#00ff41] transition-all group-hover:shadow-[0_0_15px_rgba(0,255,65,0.2)]">
 							{#if artist.picture}
 								<img
 									src={losslessAPI.getArtistPictureUrl(artist.picture)}
@@ -636,15 +636,15 @@
 									class="h-full w-full object-cover transition-transform group-hover:scale-105"
 								/>
 							{:else}
-								<div class="flex h-full w-full items-center justify-center bg-gray-800">
-									<User size={48} class="text-gray-600" />
+								<div class="flex h-full w-full items-center justify-center bg-[#001100]">
+									<User size={48} class="text-[#006622]" />
 								</div>
 							{/if}
 						</div>
-						<h3 class="truncate font-semibold text-white group-hover:text-blue-400">
+						<h3 class="truncate font-mono text-sm font-semibold text-[#00ff41] group-hover:matrix-glow transition-all">
 							{artist.name}
 						</h3>
-						<p class="text-xs text-gray-500">Artist</p>
+						<p class="text-[10px] text-[#006622] font-mono uppercase tracking-wider">[ ARTIST ]</p>
 					</button>
 				{/each}
 			</div>
@@ -692,8 +692,8 @@
 				</section>
 			</div>
 		{:else if query.trim() && !isLoading}
-			<div class="py-12 text-center text-gray-400">
-				<p>No results found...</p>
+			<div class="py-12 text-center text-[#006622] border border-[#003311] bg-[#001100] p-8">
+				<p class="font-mono uppercase tracking-wider text-sm">[ NO RESULTS FOUND ]</p>
 			</div>
 		{/if}
 	{/if}
