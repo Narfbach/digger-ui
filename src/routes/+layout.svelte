@@ -332,7 +332,7 @@
 	<link rel="icon" href={favicon} />
 	<link rel="manifest" href="/manifest.webmanifest" />
 	<link rel="icon" href="/icons/icon.svg" type="image/svg+xml" />
-	<meta name="theme-color" content="#0f172a" />
+	<meta name="theme-color" content="#000000" />
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -343,18 +343,20 @@
 	/>
 </svelte:head>
 
-<div class="flex min-h-screen flex-col bg-neutral-800 text-white">
+<div class="flex min-h-screen flex-col bg-black text-[#00ff41]">
 	<!-- Header -->
 	<header
-		class="z-50 sticky top-0 z-40 border-b border-gray-800 bg-neutral-800"
+		class="z-50 sticky top-0 z-40 border-b border-[#003311] bg-black/95 backdrop-blur-sm"
 		bind:clientHeight={headerHeight}
 	>
-		<div class="mx-auto max-w-screen-2xl px-4 py-4">
+		<div class="mx-auto max-w-screen-2xl px-4 py-3">
 			<div class="flex items-center justify-between">
-				<a href="/" class="flex items-center gap-3 transition-opacity hover:opacity-80">
+				<a href="/" class="flex items-center gap-3 transition-opacity hover:opacity-80 group">
 					<div>
-						<h1 class="text-2xl font-bold">{data.title}</h1>
-						<p class="text-xs text-gray-400">sailing on PCM tidal waves</p>
+						<h1 class="text-xl font-bold font-['Orbitron'] text-[#00ff41] tracking-wider group-hover:matrix-glow transition-all" style="font-family: 'Orbitron', monospace;">
+							&gt; {data.title}
+						</h1>
+						<p class="text-[10px] text-[#006622] font-mono uppercase tracking-widest">[ LOSSLESS PROTOCOL ]</p>
 					</div>
 				</a>
 
@@ -363,30 +365,30 @@
 						<button
 							onclick={() => (showDownloadMenu = !showDownloadMenu)}
 							type="button"
-							class="flex items-center gap-2 rounded-lg border border-gray-800 bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-gray-800"
+							class="flex items-center gap-2 border border-[#003311] bg-black px-4 py-2 text-xs font-mono text-[#00ff41] transition-all hover:border-[#00ff41] hover:shadow-[0_0_10px_rgba(0,255,65,0.3)] uppercase tracking-wider"
 							aria-haspopup="true"
 							aria-expanded={showDownloadMenu}
 						>
-							<span>Exports</span>
+							<span>[ EXPORTS ]</span>
 							<ChevronDown
-								size={16}
+								size={14}
 								class={`transition-transform ${showDownloadMenu ? 'rotate-180' : ''}`}
 							/>
 						</button>
 						{#if showDownloadMenu}
-							<div class="absolute right-0 z-40 mt-2 w-72 rounded-xl border border-gray-800 bg-neutral-900/95 p-3 shadow-2xl backdrop-blur">
+							<div class="absolute right-0 z-40 mt-2 w-72 border border-[#00ff41] bg-black/98 p-4 shadow-[0_0_20px_rgba(0,255,65,0.3)] backdrop-blur">
 								<div>
-									<p class="px-1 text-[11px] font-semibold uppercase tracking-wide text-gray-500">
-										Download preference
+									<p class="px-1 text-[10px] font-mono font-semibold uppercase tracking-widest text-[#006622]">
+										[ DOWNLOAD MODE ]
 									</p>
-									<div class="mt-2 flex flex-col gap-2">
+									<div class="mt-3 flex flex-col gap-2">
 										<button
 											type="button"
 											onclick={() => setDownloadMode('individual')}
-											class={`flex w-full items-center justify-between gap-2 rounded-lg border px-3 py-2 text-sm transition-colors ${
+											class={`flex w-full items-center justify-between gap-2 border px-3 py-2 text-xs font-mono transition-all ${
 												downloadMode === 'individual'
-													? 'border-blue-500 bg-blue-900/40 text-white'
-													: 'border-gray-800 text-gray-300 hover:bg-gray-800/70'
+													? 'border-[#00ff41] bg-[#001100] text-[#00ff41] shadow-[0_0_10px_rgba(0,255,65,0.2)]'
+													: 'border-[#003311] text-[#00b82e] hover:border-[#00b82e]'
 												}`}
 											aria-pressed={downloadMode === 'individual'}
 										>
@@ -401,10 +403,10 @@
 										<button
 											type="button"
 											onclick={() => setDownloadMode('zip')}
-											class={`flex w-full items-center justify-between gap-2 rounded-lg border px-3 py-2 text-sm transition-colors ${
+											class={`flex w-full items-center justify-between gap-2 border px-3 py-2 text-xs font-mono transition-all ${
 												downloadMode === 'zip'
-													? 'border-blue-500 bg-blue-900/40 text-white'
-													: 'border-gray-800 text-gray-300 hover:bg-gray-800/70'
+													? 'border-[#00ff41] bg-[#001100] text-[#00ff41] shadow-[0_0_10px_rgba(0,255,65,0.2)]'
+													: 'border-[#003311] text-[#00b82e] hover:border-[#00b82e]'
 												}`}
 											aria-pressed={downloadMode === 'zip'}
 										>
@@ -419,10 +421,10 @@
 										<button
 											type="button"
 											onclick={() => setDownloadMode('csv')}
-											class={`flex w-full items-center justify-between gap-2 rounded-lg border px-3 py-2 text-sm transition-colors ${
+											class={`flex w-full items-center justify-between gap-2 border px-3 py-2 text-xs font-mono transition-all ${
 												downloadMode === 'csv'
-													? 'border-blue-500 bg-blue-900/40 text-white'
-													: 'border-gray-800 text-gray-300 hover:bg-gray-800/70'
+													? 'border-[#00ff41] bg-[#001100] text-[#00ff41] shadow-[0_0_10px_rgba(0,255,65,0.2)]'
+													: 'border-[#003311] text-[#00b82e] hover:border-[#00b82e]'
 												}`}
 											aria-pressed={downloadMode === 'csv'}
 										>
@@ -439,7 +441,7 @@
 								<button
 									onclick={handleQueueDownload}
 									type="button"
-									class="mt-3 flex w-full items-center justify-between gap-3 rounded-lg border border-gray-800 bg-neutral-900 px-3 py-2 text-sm text-gray-200 transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-60"
+									class="mt-4 flex w-full items-center justify-between gap-3 border border-[#00ff41] bg-[#001100] px-3 py-2 text-xs font-mono text-[#00ff41] transition-all hover:shadow-[0_0_15px_rgba(0,255,65,0.4)] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:shadow-none uppercase"
 									disabled={queueActionBusy}
 								>
 									<span class="flex items-center gap-2">
@@ -455,13 +457,13 @@
 										{/if}
 									</span>
 									{#if queueActionBusy}
-										<LoaderCircle size={16} class="animate-spin text-gray-300" />
+										<LoaderCircle size={16} class="animate-spin text-[#00ff41]" />
 									{/if}
 								</button>
 								<button
 									onclick={handleExportQueueCsv}
 									type="button"
-									class="mt-2 flex w-full items-center justify-between gap-3 rounded-lg border border-gray-800 bg-neutral-900 px-3 py-2 text-sm text-gray-200 transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-60"
+									class="mt-2 flex w-full items-center justify-between gap-3 border border-[#003311] bg-black px-3 py-2 text-xs font-mono text-[#00b82e] transition-all hover:border-[#00b82e] disabled:cursor-not-allowed disabled:opacity-40 uppercase"
 									disabled={isCsvExporting}
 								>
 									<span class="flex items-center gap-2">
@@ -469,12 +471,11 @@
 										<span>Export links as CSV</span>
 									</span>
 									{#if isCsvExporting}
-										<LoaderCircle size={16} class="animate-spin text-gray-300" />
+										<LoaderCircle size={16} class="animate-spin text-[#00b82e]" />
 									{/if}
 								</button>
-								<p class="mt-2 px-1 text-xs text-gray-500">
-									Queue actions follow your selection above. ZIP bundles require at least two tracks, while CSV
-									exports capture the track links without downloading audio.
+								<p class="mt-3 px-1 text-[10px] text-[#006622] font-mono leading-relaxed border-t border-[#003311] pt-3">
+									Queue actions follow your selection above. ZIP bundles require at least two tracks.
 								</p>
 							</div>
 						{/if}
@@ -482,11 +483,11 @@
 					<a
 						target="_blank"
 						rel="noopener noreferrer"
-						href="https://github.com/uimaxbai/tidal-ui"
-						class="aspect-square flex items-center gap-2 rounded-lg border border-gray-800 bg-neutral-900 p-2 text-white transition-colors hover:bg-gray-800"
+						href="https://github.com/Narfbach/digger-ui"
+						class="aspect-square flex items-center gap-2 border border-[#003311] bg-black p-2 text-[#00ff41] transition-all hover:border-[#00ff41] hover:shadow-[0_0_10px_rgba(0,255,65,0.3)]"
 						aria-label="Project GitHub"
 					>
-						<!-- GitHub SVG from https://github.com/logos -->
+						<!-- GitHub SVG -->
 						<svg
 							viewBox="0 0 98 96"
 							class="flex h-4 w-4 flex-shrink-0 align-middle"
@@ -498,7 +499,7 @@
 								fill-rule="evenodd"
 								clip-rule="evenodd"
 								d="M48.854 0C21.839 0 0 22 0 49.217c0 21.756 13.993 40.172 33.405 46.69 2.427.49 3.316-1.059 3.316-2.362 0-1.141-.08-5.052-.08-9.127-13.59 2.934-16.42-5.867-16.42-5.867-2.184-5.704-5.42-7.17-5.42-7.17-4.448-3.015.324-3.015.324-3.015 4.934.326 7.523 5.052 7.523 5.052 4.367 7.496 11.404 5.378 14.235 4.074.404-3.178 1.699-5.378 3.074-6.6-10.839-1.141-22.243-5.378-22.243-24.283 0-5.378 1.94-9.778 5.014-13.2-.485-1.222-2.184-6.275.486-13.038 0 0 4.125-1.304 13.426 5.052a46.97 46.97 0 0 1 12.214-1.63c4.125 0 8.33.571 12.213 1.63 9.302-6.356 13.427-5.052 13.427-5.052 2.67 6.763.97 11.816.485 13.038 3.155 3.422 5.015 7.822 5.015 13.2 0 18.905-11.404 23.06-22.324 24.283 1.78 1.548 3.316 4.481 3.316 9.126 0 6.6-.08 11.897-.08 13.526 0 1.304.89 2.853 3.316 2.364 19.412-6.52 33.405-24.935 33.405-46.691C97.707 22 75.788 0 48.854 0z"
-								fill="#fff"
+								fill="#00ff41"
 							/></svg
 						>
 					</a>
@@ -508,7 +509,7 @@
 	</header>
 
 	<!-- Main Content -->
-	<main class="mb-36 flex-1 rounded-t-2xl bg-neutral-900">
+	<main class="mb-36 flex-1 bg-black">
 		<div
 			class="mx-auto max-w-screen-2xl px-4 py-6"
 			style={`padding-bottom: ${contentPaddingBottom}px;`}
