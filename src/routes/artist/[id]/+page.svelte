@@ -209,18 +209,18 @@
 
 {#if isLoading}
 	<div class="flex items-center justify-center py-24">
-		<LoaderCircle size={16} class="h-16 w-16 animate-spin text-blue-500" />
+		<LoaderCircle size={16} class="h-16 w-16 animate-spin text-[#00ff41]" />
 	</div>
 {:else if error}
 	<div class="mx-auto max-w-2xl py-12">
-		<div class="rounded-lg border border-red-900 bg-red-900/20 p-6">
-			<h2 class="mb-2 text-xl font-semibold text-red-400">Error Loading Artist</h2>
-			<p class="text-red-300">{error}</p>
+		<div class="border border-[#ff0033] bg-[#110000] p-6">
+			<h2 class="mb-2 text-xl font-mono font-semibold text-[#ff0033]">[ ERROR LOADING ARTIST ]</h2>
+			<p class="text-[#ff0033] font-mono text-sm">{error}</p>
 			<button
 				onclick={() => goto('/')}
-				class="mt-4 rounded-lg bg-red-600 px-4 py-2 transition-colors hover:bg-red-700"
+				class="mt-4 border border-[#00ff41] bg-black px-4 py-2 text-[#00ff41] font-mono text-xs uppercase transition-all hover:shadow-[0_0_10px_rgba(0,255,65,0.4)]"
 			>
-				Go Home
+				[ GO HOME ]
 			</button>
 		</div>
 	</div>
@@ -229,31 +229,31 @@
 		<!-- Back Button -->
 		<button
 			onclick={() => window.history.back()}
-			class="flex items-center gap-2 text-gray-400 transition-colors hover:text-white"
+			class="flex items-center gap-2 text-[#006622] transition-all hover:text-[#00ff41] font-mono text-xs uppercase"
 		>
-			<ArrowLeft size={20} />
-			Back
+			<ArrowLeft size={18} />
+			[ BACK ]
 		</button>
 
 		<!-- Artist Header -->
 		<div class="flex flex-col items-start gap-8 md:flex-row md:items-end">
 			<!-- Artist Picture -->
 			<div
-				class="aspect-square w-full flex-shrink-0 overflow-hidden rounded-full bg-gray-800 shadow-2xl md:w-80"
+				class="aspect-square w-full flex-shrink-0 overflow-hidden rounded-full border border-[#00ff41] bg-[#001100] shadow-[0_0_30px_rgba(0,255,65,0.3)] md:w-80"
 			>
 				{#if artistImage}
 					<img src={artistImage} alt={artist.name} class="h-full w-full object-cover" />
 				{:else}
 					<div class="flex h-full w-full items-center justify-center">
-						<User size={120} class="text-gray-600" />
+						<User size={120} class="text-[#006622]" />
 					</div>
 				{/if}
 			</div>
 
 			<!-- Artist Info -->
 			<div class="flex-1">
-				<p class="mb-2 text-sm text-gray-400">ARTIST</p>
-				<h1 class="mb-4 text-4xl font-bold md:text-6xl">{artist.name}</h1>
+				<p class="mb-2 text-xs text-[#006622] font-mono uppercase tracking-widest">[ ARTIST ]</p>
+				<h1 class="mb-4 text-4xl font-bold md:text-6xl text-[#00ff41] font-['Orbitron'] matrix-glow" style="font-family: 'Orbitron', monospace;">{artist.name}</h1>
 
 				<div class="mb-6 flex flex-wrap items-center gap-4">
 					{#if artist.popularity}
