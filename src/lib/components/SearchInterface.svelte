@@ -45,20 +45,10 @@
 
 	const newsItems = [
 		{
-			title: 'Even more changes!',
+			title: 'Welcome to Digger',
 			description:
-				'I\'ve stabilised the API a bit and added a few more features such as ZIP download of albums, better error handling, etc. Stay tuned for word by word lyrics!'
-		},
-		{
-			title: 'QOL changes',
-			description:
-				'This website is still very much in beta, but queue management and album/artist pages/downloads have been added as well as some bug squashing/QOL changes such as bigger album covers and download all for albums.'
-		},
-		{
-			title: 'Initial release!',
-			description:
-				"Two APIs fetch lossless CD-quality 16/44.1kHz FLACs. No support for Hi-Res yet but I'm working on it haha. No playlist saving or logging in either but downloading and streaming work."
-		},
+				'Stream and download lossless music. Search the database and start listening.'
+		}
 	];
 
 	const trackSkeletons = Array.from({ length: 6 }, (_, index) => index);
@@ -671,22 +661,22 @@
 			</div>
 			<!-- News Section -->
 		{:else if !query.trim()}
-			<div class="rounded-lg border border-gray-800 p-4">
-				<h2 class="mb-4 text-3xl font-bold">News</h2>
-				<section class="grid gap-4 text-left shadow-lg sm:grid-cols-2">
+			<div class="border border-[#003311] bg-[#001100] p-6 mb-32">
+				<h2 class="mb-6 text-2xl font-bold text-[#00ff41] font-['Orbitron'] matrix-glow" style="font-family: 'Orbitron', monospace;">[ NEWS ]</h2>
+				<section class="grid gap-4 text-left">
 					{#each newsItems as item}
 						<article
-							class="flex flex-col gap-3 rounded-lg border border-gray-800/80 bg-gray-900/70 p-4 transition-transform hover:-translate-y-0.5"
+							class="flex flex-col gap-3 border border-[#00ff41] bg-black p-6 shadow-[0_0_20px_rgba(0,255,65,0.2)]"
 						>
 							<div class="flex items-center gap-3">
 								<div
-									class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-900/40 text-blue-300"
+									class="flex h-10 w-10 items-center justify-center border border-[#00ff41] bg-[#001100] text-[#00ff41]"
 								>
 									<Newspaper size={20} />
 								</div>
-								<h3 class="text-lg font-semibold text-white">{item.title}</h3>
+								<h3 class="text-lg font-semibold text-[#00ff41] font-mono">{item.title}</h3>
 							</div>
-							<p class="text-sm text-gray-400">{item.description}</p>
+							<p class="text-sm text-[#00b82e] font-mono">{item.description}</p>
 						</article>
 					{/each}
 				</section>
