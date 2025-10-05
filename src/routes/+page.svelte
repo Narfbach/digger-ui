@@ -47,7 +47,7 @@
 		<div class="flex items-center justify-center gap-3 mb-8">
 			<div class="h-px w-16 bg-[#00ff41] opacity-50"></div>
 			<p class="text-[#00b82e] text-sm font-mono uppercase tracking-[0.3em]">
-				[ SYSTEM ONLINE ]
+				[ MUSIC FOR EVERYONE ]
 			</p>
 			<div class="h-px w-16 bg-[#00ff41] opacity-50"></div>
 		</div>
@@ -58,7 +58,7 @@
 
 		<!-- Version badge -->
 		<div class="mt-6 inline-block px-4 py-1 border border-[#003311] bg-[#001100] text-[#00b82e] text-xs font-mono">
-			VERSION 1.5.0
+			VERSION 1.1.0
 		</div>
 	</div>
 
