@@ -120,18 +120,18 @@
 
 {#if isLoading}
 	<div class="flex items-center justify-center py-24">
-		<LoaderCircle size={16} class="h-16 w-16 animate-spin text-blue-500" />
+		<LoaderCircle size={16} class="h-16 w-16 animate-spin text-[#00ff41]" />
 	</div>
 {:else if error}
 	<div class="mx-auto max-w-2xl py-12">
-		<div class="rounded-lg border border-red-900 bg-red-900/20 p-6">
-			<h2 class="mb-2 text-xl font-semibold text-red-400">Error Loading Album</h2>
-			<p class="text-red-300">{error}</p>
+		<div class="border border-[#ff0033] bg-[#110000] p-6">
+			<h2 class="mb-2 text-xl font-mono font-semibold text-[#ff0033]">[ ERROR LOADING ALBUM ]</h2>
+			<p class="text-[#ff0033] font-mono text-sm">{error}</p>
 			<button
 				onclick={() => goto('/')}
-				class="mt-4 rounded-lg bg-red-600 px-4 py-2 transition-colors hover:bg-red-700"
+				class="mt-4 border border-[#00ff41] bg-black px-4 py-2 text-[#00ff41] font-mono text-xs uppercase transition-all hover:shadow-[0_0_10px_rgba(0,255,65,0.4)]"
 			>
-				Go Home
+				[ GO HOME ]
 			</button>
 		</div>
 	</div>
@@ -140,10 +140,10 @@
 		<!-- Back Button -->
 		<button
 			onclick={() => window.history.back()}
-			class="flex items-center gap-2 text-gray-400 transition-colors hover:text-white"
+			class="flex items-center gap-2 text-[#006622] transition-all hover:text-[#00ff41] font-mono text-xs uppercase"
 		>
-			<ArrowLeft size={20} />
-			Back
+			<ArrowLeft size={18} />
+			[ BACK ]
 		</button>
 
 		<!-- Album Header -->
@@ -151,7 +151,7 @@
 			<!-- Album Cover -->
 			{#if album.cover}
 				<div
-					class="aspect-square w-full flex-shrink-0 overflow-hidden rounded-lg shadow-2xl md:w-80"
+					class="aspect-square w-full flex-shrink-0 overflow-hidden border border-[#00ff41] shadow-[0_0_30px_rgba(0,255,65,0.3)] md:w-80"
 				>
 					<img
 						src={losslessAPI.getCoverUrl(album.cover, '640')}
@@ -163,8 +163,8 @@
 
 			<!-- Album Info -->
 			<div class="flex flex-1 flex-col justify-end">
-				<p class="mb-2 text-sm text-gray-400">ALBUM</p>
-				<h1 class="mb-4 text-4xl font-bold md:text-6xl">{album.title}</h1>
+				<p class="mb-2 text-xs text-[#006622] font-mono uppercase tracking-widest">[ ALBUM ]</p>
+				<h1 class="mb-4 text-4xl font-bold md:text-6xl text-[#00ff41] font-['Orbitron'] matrix-glow" style="font-family: 'Orbitron', monospace;">{album.title}</h1>
 				<div class="mb-4 flex items-center gap-1">
 					{#if album.explicit}
 						<svg
