@@ -28,6 +28,23 @@
 	let isCsvExporting = $state(false);
 	let isLegacyQueueDownloading = $state(false);
 	let downloadMenuContainer: HTMLDivElement | null = null;
+
+	// Typewriter effect
+	const phrases = [
+		'LOSSLESS PROTOCOL',
+		'FLAC STREAMING',
+		'HI-FI QUALITY',
+		'CD QUALITY AUDIO',
+		'DIGITAL UNDERGROUND',
+		'MUSIC DATABASE',
+		'AUDIO MATRIX',
+		'SOUND ARCHIVE',
+		'BINARY BEATS',
+		'SONIC NETWORK'
+	];
+	let currentPhraseIndex = $state(0);
+	let displayedText = $state('');
+	let isDeleting = $state(false);
 	const downloadMode = $derived($downloadPreferencesStore.mode);
 	const queueActionBusy = $derived(
 		downloadMode === 'zip'
@@ -263,6 +280,39 @@
 		};
 		updateViewportHeight();
 		window.addEventListener('resize', updateViewportHeight);
+
+		// Typewriter effect
+		let typewriterTimeout: ReturnType<typeof setTimeout>;
+		const typeWriter = () => {
+			const currentPhrase = phrases[currentPhraseIndex];
+
+			if (!isDeleting) {
+				// Writing
+				if (displayedText.length < currentPhrase.length) {
+					displayedText = currentPhrase.substring(0, displayedText.length + 1);
+					typewriterTimeout = setTimeout(typeWriter, 100);
+				} else {
+					// Pause before deleting
+					typewriterTimeout = setTimeout(() => {
+						isDeleting = true;
+						typeWriter();
+					}, 2000);
+				}
+			} else {
+				// Deleting
+				if (displayedText.length > 0) {
+					displayedText = currentPhrase.substring(0, displayedText.length - 1);
+					typewriterTimeout = setTimeout(typeWriter, 50);
+				} else {
+					// Move to next phrase
+					isDeleting = false;
+					currentPhraseIndex = (currentPhraseIndex + 1) % phrases.length;
+					typewriterTimeout = setTimeout(typeWriter, 500);
+				}
+			}
+		};
+
+		typeWriter();
 		const handleDocumentClick = (event: MouseEvent) => {
 			if (!showDownloadMenu) return;
 			const root = downloadMenuContainer;
@@ -323,6 +373,9 @@
 			if (controllerChangeHandler) {
 				navigator.serviceWorker.removeEventListener('controllerchange', controllerChangeHandler);
 			}
+			if (typewriterTimeout) {
+				clearTimeout(typewriterTimeout);
+			}
 		};
 	});
 </script>
@@ -356,7 +409,9 @@
 						<h1 class="text-xl font-bold font-['Orbitron'] text-[#00ff41] tracking-wider group-hover:matrix-glow transition-all" style="font-family: 'Orbitron', monospace;">
 							&gt; {data.title}
 						</h1>
-						<p class="text-[10px] text-[#006622] font-mono uppercase tracking-widest">[ LOSSLESS PROTOCOL ]</p>
+						<p class="text-[10px] text-[#006622] font-mono uppercase tracking-widest">
+							[ {displayedText}<span class="animate-pulse">_</span> ]
+						</p>
 					</div>
 				</a>
 
