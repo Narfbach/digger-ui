@@ -2,7 +2,6 @@ import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 import vercel from '@sveltejs/adapter-vercel';
 import node from '@sveltejs/adapter-node';
 import cloudflare from '@sveltejs/adapter-cloudflare';
-import staticAdapter from '@sveltejs/adapter-static';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -14,18 +13,6 @@ const config = {
 };
 
 function selectAdapter() {
-	// GitHub Pages environment
-	if (process.env.GITHUB_PAGES) {
-		console.log('Using Static adapter (GitHub Pages)');
-		return staticAdapter({
-			pages: 'build',
-			assets: 'build',
-			fallback: '404.html',
-			precompress: false,
-			strict: true
-		});
-	}
-
 	// Vercel automatically sets this
 	if (process.env.VERCEL) {
 		console.log('Using Vercel adapter');
