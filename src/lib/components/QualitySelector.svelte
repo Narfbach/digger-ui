@@ -48,7 +48,7 @@
 <div class="quality-selector relative">
 	<button
 		onclick={toggleDropdown}
-		class="flex items-center gap-2 rounded-lg bg-gray-800 px-4 py-2 text-white transition-colors hover:bg-gray-700"
+		class="flex items-center gap-2 border border-[#003311] bg-black px-4 py-2 text-[#00b82e] font-mono transition-all hover:border-[#00ff41] hover:text-[#00ff41]"
 		aria-label="Select audio quality"
 	>
 		<Settings size={18} />
@@ -59,33 +59,33 @@
 
 	{#if isOpen}
 		<div
-			class="absolute right-0 z-50 mt-2 w-64 overflow-hidden rounded-lg border border-gray-700 bg-gray-800 shadow-lg"
+			class="absolute right-0 z-50 mt-2 w-64 overflow-hidden border border-[#00ff41] bg-black shadow-[0_0_20px_rgba(0,255,65,0.3)]"
 		>
-			<div class="border-b border-gray-700 p-2">
-				<h3 class="text-sm font-semibold text-white">Audio Quality</h3>
+			<div class="border-b border-[#003311] p-2">
+				<h3 class="text-sm font-semibold text-[#00ff41] font-mono uppercase">[ AUDIO QUALITY ]</h3>
 			</div>
 			<div class="py-1">
 				{#each qualities as quality}
 					<button
 						onclick={() => selectQuality(quality.value)}
-						class="flex w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-gray-700 disabled:cursor-not-allowed disabled:text-gray-500 disabled:opacity-60 disabled:hover:bg-gray-800"
+						class="flex w-full items-start gap-3 px-4 py-3 text-left transition-all hover:bg-[#001100] disabled:cursor-not-allowed disabled:text-[#003311] disabled:opacity-60 disabled:hover:bg-black"
 						disabled={isQualityDisabled(quality.value)}
 						aria-disabled={isQualityDisabled(quality.value)}
 						title={isQualityDisabled(quality.value) ? 'Not available in this build' : undefined}
 					>
 						<div class="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center">
 							{#if $playerStore.quality === quality.value}
-								<Check size={18} class="text-blue-500" />
+								<Check size={18} class="text-[#00ff41]" />
 							{/if}
 						</div>
 						<div class="flex-1">
-							<div class="text-sm font-medium text-white">{quality.label}</div>
+							<div class="text-sm font-medium text-[#00b82e] font-mono">{quality.label}</div>
 							<div
-								class={`text-xs ${isQualityDisabled(quality.value) ? 'text-gray-500' : 'text-gray-400'}`}
+								class={`text-xs font-mono ${isQualityDisabled(quality.value) ? 'text-[#003311]' : 'text-[#006622]'}`}
 							>
 								{quality.description}
 								{#if isQualityDisabled(quality.value)}
-									<span class="ml-1 text-[10px] tracking-wide text-gray-500 uppercase"
+									<span class="ml-1 text-[10px] tracking-wide text-[#003311] uppercase"
 										>Unavailable</span
 									>
 								{/if}

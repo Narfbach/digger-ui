@@ -160,8 +160,8 @@
 
 <div class={`grid gap-4 ${columnClass}`}>
 	{#if displayedTracks.length === 0}
-		<div class="col-span-full py-12 text-center text-gray-400">
-			<p>No tracks available</p>
+		<div class="col-span-full py-12 text-center text-[#006622] font-mono">
+			<p>[ NO TRACKS AVAILABLE ]</p>
 		</div>
 	{:else}
 		{#each displayedTracks as track, index (track.id)}
@@ -170,7 +170,7 @@
 				tabindex="0"
 				onclick={() => handlePlayTrack(track, index)}
 				onkeydown={(event) => handleCardKeydown(event, track, index)}
-				class="group flex h-full cursor-pointer flex-col gap-4 rounded-xl border border-gray-800 bg-gray-900/50 p-4 transition-colors hover:border-blue-700 hover:bg-gray-900/70 focus:outline-none focus:ring-2 focus:ring-blue-500"
+				class="group flex h-full cursor-pointer flex-col gap-4 border border-[#003311] bg-[#001100] p-4 transition-all hover:border-[#00ff41] hover:shadow-[0_0_15px_rgba(0,255,65,0.2)] focus:outline-none focus:ring-2 focus:ring-[#00ff41]"
 			>
 				<div class="flex items-start gap-4">
 					<button
@@ -178,15 +178,15 @@
 							event.stopPropagation();
 							handlePlayTrack(track, index);
 						}}
-						class="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-gray-800 transition-transform hover:scale-110"
+						class="flex h-9 w-9 flex-shrink-0 items-center justify-center border border-[#003311] bg-black transition-transform hover:scale-110 hover:border-[#00ff41]"
 						aria-label={isPlaying(track) ? 'Pause' : 'Play'}
 					>
 						{#if isPlaying(track)}
-							<Pause size={18} class="text-blue-500" />
+							<Pause size={18} class="text-[#00ff41]" />
 						{:else if isCurrentTrack(track)}
-							<Play size={18} class="text-blue-500" />
+							<Play size={18} class="text-[#00ff41]" />
 						{:else}
-							<span class="text-sm font-semibold text-gray-300">{index + 1}</span>
+							<span class="text-sm font-semibold font-mono text-[#006622]">{index + 1}</span>
 						{/if}
 					</button>
 
@@ -194,40 +194,40 @@
 						<img
 							src={losslessAPI.getCoverUrl(track.album.cover, '320')}
 							alt={track.title}
-							class="h-20 w-20 flex-shrink-0 rounded-lg object-cover shadow-lg"
+							class="h-20 w-20 flex-shrink-0 border border-[#003311] object-cover"
 						/>
 					{/if}
 
 					<div class="min-w-0 flex-1">
 						<h3
-							class="truncate text-lg font-semibold {isCurrentTrack(track)
-								? 'text-blue-500'
-								: 'text-white group-hover:text-blue-400'}"
+							class="truncate text-lg font-semibold font-mono {isCurrentTrack(track)
+								? 'text-[#00ff41]'
+								: 'text-[#00b82e] group-hover:text-[#00ff41]'}"
 						>
 							{track.title}
 							{#if track.explicit}
-								<span class="ml-1 text-xs text-gray-500">[E]</span>
+								<span class="ml-1 text-xs text-[#006622]">[E]</span>
 							{/if}
 						</h3>
-						<div class="mt-1 space-y-1 text-sm text-gray-400">
+						<div class="mt-1 space-y-1 text-sm text-[#006622] font-mono">
 							<p class="truncate">{track.artist.name}</p>
 							{#if track.album}
-								<p class="truncate text-xs text-gray-500">{track.album.title}</p>
+								<p class="truncate text-xs text-[#003311]">{track.album.title}</p>
 							{/if}
 						</div>
 						{#if getDisplayTags(track.mediaMetadata?.tags).length > 0}
-							<p class="mt-2 text-xs text-gray-500">
+							<p class="mt-2 text-xs text-[#003311] font-mono">
 								{getDisplayTags(track.mediaMetadata?.tags).join(', ')}
 							</p>
 						{/if}
 					</div>
 				</div>
 
-				<div class="mt-auto flex flex-wrap items-center justify-between gap-3 text-sm text-gray-400">
+				<div class="mt-auto flex flex-wrap items-center justify-between gap-3 text-sm text-[#006622]">
 					<div class="flex items-center gap-2">
 						<button
 							onclick={(event) => handlePlayNext(track, event)}
-							class="rounded-full p-2 transition-colors hover:bg-gray-800 hover:text-white"
+							class="p-2 transition-all hover:text-[#00ff41]"
 							title="Play next"
 							aria-label={`Play ${track.title} next`}
 						>
@@ -235,7 +235,7 @@
 						</button>
 						<button
 							onclick={(event) => handleAddToQueue(track, event)}
-							class="rounded-full p-2 transition-colors hover:bg-gray-800 hover:text-white"
+							class="p-2 transition-all hover:text-[#00ff41]"
 							title="Add to queue"
 							aria-label={`Add ${track.title} to queue`}
 						>
@@ -247,14 +247,14 @@
 								? handleCancelDownload(track.id, event)
 								: handleDownload(track, event)
 						}
-						class="rounded-full p-2 transition-colors hover:bg-gray-800 hover:text-white"
+						class="p-2 transition-all hover:text-[#00ff41]"
 						title={downloadingIds.has(track.id) ? 'Cancel download' : 'Download track'}
 						aria-label={downloadingIds.has(track.id) ? 'Cancel download' : 'Download track'}
 						aria-busy={downloadingIds.has(track.id)}
 						aria-pressed={downloadingIds.has(track.id)}
 					>
 						{#if downloadingIds.has(track.id)}
-							<span class="flex h-4 w-4 items-center justify-center">
+							<span class="flex h-4 w-4 items-center justify-center text-[#00ff41]">
 								{#if cancelledIds.has(track.id)}
 									<X size={14} />
 								{:else}
@@ -264,13 +264,13 @@
 								{/if}
 							</span>
 						{:else if cancelledIds.has(track.id)}
-							<X size={18} />
+							<X size={18} class="text-[#ff0033]" />
 						{:else}
 							<Download size={18} />
 						{/if}
 					</button>
 					</div>
-					<div class="flex items-center gap-1 text-xs text-gray-400">
+					<div class="flex items-center gap-1 text-xs text-[#006622] font-mono">
 						<Clock size={14} />
 						<span>{losslessAPI.formatDuration(track.duration)}</span>
 					</div>

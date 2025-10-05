@@ -139,18 +139,18 @@
 
 <div class="w-full">
 	{#if tracks.length === 0}
-		<div class="py-12 text-center text-gray-400">
-			<p>No tracks available</p>
+		<div class="py-12 text-center text-[#006622] font-mono">
+			<p>[ NO TRACKS AVAILABLE ]</p>
 		</div>
 	{:else}
 		<div class="space-y-1">
 			{#each tracks as track, index}
 				<div
-					class="group flex w-full items-center gap-3 rounded-lg p-3 text-left transition-colors {isCurrentTrack(
+					class="group flex w-full items-center gap-3 p-3 text-left transition-all border-b border-[#001100] {isCurrentTrack(
 						track
 					)
-						? 'bg-blue-900/20'
-						: 'hover:bg-gray-800'}"
+						? 'bg-[#001100] border-[#00ff41]'
+						: 'hover:bg-[#001100] hover:border-[#003311]'}"
 				>
 					<!-- Track Number / Play Button -->
 					<button
@@ -159,12 +159,12 @@
 						aria-label={isPlaying(track) ? 'Pause' : 'Play'}
 					>
 						{#if isPlaying(track)}
-							<Pause size={16} class="text-blue-500" />
+							<Pause size={16} class="text-[#00ff41]" />
 						{:else if isCurrentTrack(track)}
-							<Play size={16} class="text-blue-500" />
+							<Play size={16} class="text-[#00ff41]" />
 						{:else}
-							<span class="text-sm text-gray-400 group-hover:hidden">{index + 1}</span>
-							<Play size={16} class="hidden text-white group-hover:block" />
+							<span class="text-sm text-[#006622] font-mono group-hover:hidden">{index + 1}</span>
+							<Play size={16} class="hidden text-[#00ff41] group-hover:block" />
 						{/if}
 					</button>
 
@@ -173,16 +173,16 @@
 						<img
 							src={losslessAPI.getCoverUrl(track.album.cover, '320')}
 							alt={track.title}
-							class="h-16 w-16 flex-shrink-0 rounded object-cover"
+							class="h-16 w-16 flex-shrink-0 border border-[#003311] object-cover"
 						/>
 					{/if}
 
 					<!-- Track Info -->
 					<div class="min-w-0 flex-1">
 						<h3
-							class="truncate font-medium {isCurrentTrack(track)
-								? 'text-blue-500'
-								: 'text-white group-hover:text-blue-400'}"
+							class="truncate font-medium font-mono {isCurrentTrack(track)
+								? 'text-[#00ff41]'
+								: 'text-[#00b82e] group-hover:text-[#00ff41]'}"
 						>
 							{track.title}
 							{#if track.explicit}
@@ -201,7 +201,7 @@
 								>
 							{/if}
 						</h3>
-						<div class="flex items-center gap-2 text-sm text-gray-400">
+						<div class="flex items-center gap-2 text-sm text-[#006622] font-mono">
 							{#if showArtist}
 								<span class="truncate">{track.artist.name}</span>
 							{/if}
@@ -212,7 +212,7 @@
 								<span class="truncate">{track.album.title}</span>
 							{/if}
 						</div>
-						<div class="mt-0.5 text-xs text-gray-500">
+						<div class="mt-0.5 text-xs text-[#003311] font-mono">
 							{#if getDisplayTags(track.mediaMetadata?.tags).length > 0}
 								• {getDisplayTags(track.mediaMetadata?.tags).join(', ')}
 							{/if}
@@ -223,7 +223,7 @@
 					<div class="flex flex-shrink-0 items-center gap-2">
 						<button
 							onclick={(event) => handlePlayNext(track, event)}
-							class="p-2 text-gray-400 transition-colors hover:text-white"
+							class="p-2 text-[#006622] transition-all hover:text-[#00ff41]"
 							title="Play next"
 							aria-label={`Play ${track.title} next`}
 						>
@@ -231,7 +231,7 @@
 						</button>
 						<button
 							onclick={(event) => handleAddToQueue(track, event)}
-							class="p-2 text-gray-400 transition-colors hover:text-white"
+							class="p-2 text-[#006622] transition-all hover:text-[#00ff41]"
 							title="Add to queue"
 							aria-label={`Add ${track.title} to queue`}
 						>
@@ -243,14 +243,14 @@
 									? handleCancelDownload(track.id, e)
 									: handleDownload(track, e)
 							}
-							class="p-2 text-gray-400 transition-colors hover:text-white"
+							class="p-2 text-[#006622] transition-all hover:text-[#00ff41]"
 							aria-label={downloadingIds.has(track.id) ? 'Cancel download' : 'Download track'}
 							title={downloadingIds.has(track.id) ? 'Cancel download' : 'Download track'}
 							aria-busy={downloadingIds.has(track.id)}
 							aria-pressed={downloadingIds.has(track.id)}
 						>
 							{#if downloadingIds.has(track.id)}
-								<span class="flex h-4 w-4 items-center justify-center">
+								<span class="flex h-4 w-4 items-center justify-center text-[#00ff41]">
 									{#if cancelledIds.has(track.id)}
 										<X size={14} />
 									{:else}
@@ -260,14 +260,14 @@
 									{/if}
 								</span>
 							{:else if cancelledIds.has(track.id)}
-								<X size={18} />
+								<X size={18} class="text-[#ff0033]" />
 							{:else}
 								<Download size={18} />
 							{/if}
 						</button>
 
 						<!-- Duration -->
-						<div class="flex w-16 items-center justify-end gap-1 text-sm text-gray-400">
+						<div class="flex w-16 items-center justify-end gap-1 text-sm text-[#006622] font-mono">
 							<Clock size={14} />
 							{losslessAPI.formatDuration(track.duration)}
 						</div>
