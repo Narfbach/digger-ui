@@ -35,8 +35,7 @@
 		<!-- Glitch effect container -->
 		<div class="relative inline-block">
 			<h1
-				class="matrix-glow font-['Orbitron'] text-7xl md:text-8xl font-black tracking-wider mb-6 relative"
-				style="font-family: 'Orbitron', monospace;"
+				class="matrix-glow text-7xl md:text-8xl font-black tracking-wider mb-6 relative"
 			>
 				<span class="text-[#00ff41]">&gt;</span>
 				<span class="text-[#00ff41]">{data.title}</span>
