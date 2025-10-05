@@ -628,8 +628,9 @@
 ></audio>
 
 <div
-	class="audio-player-backdrop fixed inset-x-0 bottom-0 z-50 px-4 pt-16 pb-5 sm:px-6 sm:pt-16 sm:pb-6"
+	class="audio-player-backdrop fixed inset-x-0 bottom-0 z-50 px-4 pt-16 pb-5 sm:px-6 sm:pt-16 sm:pb-6 border-t border-[#003311]"
 	bind:this={containerElement}
+	style="background: linear-gradient(to top, #000000 0%, #001100 100%);"
 >
 	<div class="relative mx-auto w-full max-w-screen-2xl">
 		{#if $ffmpegBanner.phase !== 'idle' || $activeTrackDownloads.length > 0}
@@ -728,34 +729,34 @@
 			</div>
 		</div>
 		{/if}
-		<div class="overflow-hidden rounded-2xl border border-gray-800 bg-zinc-900 shadow-2xl">
+		<div class="overflow-hidden border border-[#00ff41] bg-black shadow-[0_0_30px_rgba(0,255,65,0.3)]">
 			<div class="relative px-4 py-3">
 			{#if $playerStore.currentTrack}
 				<!-- Progress Bar -->
 				<div class="mb-3">
 					<button
 						onclick={handleSeek}
-						class="group relative h-1 w-full cursor-pointer overflow-hidden rounded-full bg-gray-700"
+						class="group relative h-1 w-full cursor-pointer overflow-hidden bg-[#003311]"
 						type="button"
 						aria-label="Seek position"
 					>
 						<div
-							class="pointer-events-none absolute inset-y-0 left-0 bg-blue-400/30 transition-all"
+							class="pointer-events-none absolute inset-y-0 left-0 bg-[#00b82e]/20 transition-all"
 							style="width: {bufferedPercent}%"
 							aria-hidden="true"
 						></div>
 						<div
-							class="pointer-events-none absolute inset-y-0 left-0 bg-blue-500 transition-all"
+							class="pointer-events-none absolute inset-y-0 left-0 bg-[#00ff41] transition-all shadow-[0_0_5px_rgba(0,255,65,0.5)]"
 							style="width: {getPercent($playerStore.currentTime, $playerStore.duration)}%"
 							aria-hidden="true"
 						></div>
 						<div
-							class="pointer-events-none absolute top-1/2 h-3 w-3 -translate-y-1/2 rounded-full bg-blue-500 opacity-0 transition-opacity group-hover:opacity-100"
+							class="pointer-events-none absolute top-1/2 h-2 w-2 -translate-y-1/2 bg-[#00ff41] opacity-0 transition-opacity group-hover:opacity-100 shadow-[0_0_10px_rgba(0,255,65,0.8)]"
 							style="left: {getPercent($playerStore.currentTime, $playerStore.duration)}%"
 							aria-hidden="true"
 						></div>
 					</button>
-					<div class="mt-1 flex justify-between text-xs text-gray-400">
+					<div class="mt-1 flex justify-between text-[10px] text-[#006622] font-mono">
 						<span>{formatTime($playerStore.currentTime)}</span>
 						<span>{formatTime($playerStore.duration)}</span>
 					</div>
@@ -768,17 +769,17 @@
 							<img
 								src={losslessAPI.getCoverUrl($playerStore.currentTrack.album.cover, '640')}
 								alt={$playerStore.currentTrack.title}
-								class="h-14 w-14 rounded object-cover shadow-lg"
+								class="h-14 w-14 object-cover border border-[#00ff41] shadow-[0_0_10px_rgba(0,255,65,0.3)]"
 							/>
 						{/if}
 						<div class="min-w-0 flex-1">
-							<h3 class="truncate font-semibold text-white">
+							<h3 class="truncate font-mono text-sm font-semibold text-[#00ff41]">
 								{$playerStore.currentTrack.title}
 							</h3>
-							<p class="truncate text-sm text-gray-400">
+							<p class="truncate text-xs text-[#00b82e] font-mono">
 								{$playerStore.currentTrack.artist.name}
 							</p>
-							<p class="text-xs text-gray-500">
+							<p class="text-[10px] text-[#006622] font-mono">
 								{formatQualityLabel($playerStore.currentTrack.audioQuality)}
 							</p>
 						</div>
@@ -789,7 +790,7 @@
 						<div class="flex w-full flex-1 items-center justify-center gap-2 sm:w-auto sm:flex-none sm:justify-center">
 							<button
 								onclick={() => playerStore.previous()}
-								class="p-2 text-gray-400 transition-colors hover:text-white disabled:opacity-50"
+								class="p-2 text-[#006622] transition-all hover:text-[#00ff41] disabled:opacity-30"
 								disabled={$playerStore.queueIndex <= 0}
 								aria-label="Previous track"
 							>
@@ -798,7 +799,7 @@
 
 							<button
 								onclick={() => playerStore.togglePlay()}
-								class="rounded-full bg-white p-3 text-gray-900 transition-transform hover:scale-105"
+								class="rounded-full border border-[#00ff41] bg-[#00ff41] p-3 text-black transition-all hover:shadow-[0_0_20px_rgba(0,255,65,0.6)]"
 								aria-label={$playerStore.isPlaying ? 'Pause' : 'Play'}
 							>
 								{#if $playerStore.isPlaying}
@@ -810,7 +811,7 @@
 
 							<button
 								onclick={() => playerStore.next()}
-								class="p-2 text-gray-400 transition-colors hover:text-white disabled:opacity-50"
+								class="p-2 text-[#006622] transition-all hover:text-[#00ff41] disabled:opacity-30"
 								disabled={$playerStore.queueIndex >= $playerStore.queue.length - 1}
 								aria-label="Next track"
 							>
