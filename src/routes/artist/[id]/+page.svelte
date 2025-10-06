@@ -204,7 +204,7 @@
 </script>
 
 <svelte:head>
-	<title>{artist?.name || 'Artist'} - TIDAL UI</title>
+	<title>Digger</title>
 </svelte:head>
 
 {#if isLoading}

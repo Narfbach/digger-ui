@@ -54,7 +54,7 @@
 </script>
 
 <svelte:head>
-	<title>{playlist?.title || 'Playlist'} - TIDAL UI</title>
+	<title>Digger</title>
 </svelte:head>
 
 {#if isLoading}

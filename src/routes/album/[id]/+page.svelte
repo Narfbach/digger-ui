@@ -115,7 +115,7 @@
 </script>
 
 <svelte:head>
-	<title>{album?.title || 'Album'} - TIDAL UI</title>
+	<title>Digger</title>
 </svelte:head>
 
 {#if isLoading}
