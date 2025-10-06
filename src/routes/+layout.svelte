@@ -16,6 +16,7 @@
 	import { Archive, FileSpreadsheet, ChevronDown, LoaderCircle, Download, Check } from 'lucide-svelte';
 	import type { Navigation } from '@sveltejs/kit';
 	import type { Track, AudioQuality } from '$lib/types';
+	import { inject } from '@vercel/analytics';
 
 	let { children, data } = $props();
 	const pageTitle = $derived(data?.title ?? 'Digger');
@@ -275,6 +276,9 @@
 	let controllerChangeHandler: (() => void) | null = null;
 
 	onMount(() => {
+		// Initialize Vercel Analytics
+		inject();
+
 		const updateViewportHeight = () => {
 			viewportHeight = window.innerHeight;
 		};
