@@ -637,27 +637,27 @@
 			<div class="pointer-events-none absolute left-0 right-0 top-0 -translate-y-full transform pb-4">
 				<div class="mx-auto flex w-full max-w-2xl flex-col gap-2 px-4">
 					{#if $ffmpegBanner.phase !== 'idle'}
-						<div class="pointer-events-auto rounded-2xl border border-blue-500/40 bg-blue-500/10 px-4 py-3 text-sm text-blue-100 shadow-xl backdrop-blur">
+						<div class="pointer-events-auto border border-[#00ff41] bg-black/95 px-4 py-3 text-sm shadow-[0_0_20px_rgba(0,255,65,0.3)] backdrop-blur">
 						<div class="flex items-start gap-3">
 							<div class="flex-1 min-w-0">
-								<p class="font-semibold leading-5 text-blue-50">
-									Downloading FFmpeg
+								<p class="font-semibold leading-5 text-[#00ff41] font-mono">
+									[ DOWNLOADING FFMPEG ]
 									{#if formatMegabytes($ffmpegBanner.totalBytes)}
-										<span class="text-blue-100/80"> ({formatMegabytes($ffmpegBanner.totalBytes)})</span>
+										<span class="text-[#00b82e]"> ({formatMegabytes($ffmpegBanner.totalBytes)})</span>
 									{/if}
 								</p>
 								{#if $ffmpegBanner.phase === 'countdown'}
-									<p class="mt-1 text-xs text-blue-100/80">
+									<p class="mt-1 text-xs text-[#00b82e] font-mono">
 										Starting in {$ffmpegBanner.countdownSeconds} seconds…
 									</p>
 								{:else if $ffmpegBanner.phase === 'loading'}
-									<p class="mt-1 text-xs text-blue-100/80">
+									<p class="mt-1 text-xs text-[#00b82e] font-mono">
 										Preparing encoder… {formatPercent($ffmpegBanner.progress)}
 									</p>
 								{:else if $ffmpegBanner.phase === 'ready'}
-									<p class="mt-1 text-xs text-blue-100/80">FFmpeg is ready to use.</p>
+									<p class="mt-1 text-xs text-[#00b82e] font-mono">[ READY ]</p>
 								{:else if $ffmpegBanner.phase === 'error'}
-									<p class="mt-1 text-xs text-red-200">
+									<p class="mt-1 text-xs text-[#ff0033] font-mono">
 										{$ffmpegBanner.error ?? 'Failed to load FFmpeg.'}
 									</p>
 								{/if}
@@ -665,7 +665,7 @@
 							{#if $ffmpegBanner.dismissible}
 								<button
 									onclick={() => downloadUiStore.dismissFfmpeg()}
-									class="rounded-full p-1 text-blue-100/70 transition-colors hover:bg-blue-500/20 hover:text-blue-50"
+									class="p-1 text-[#006622] transition-all hover:text-[#00ff41]"
 									aria-label="Dismiss FFmpeg download"
 								>
 									<X size={16} />
@@ -673,9 +673,9 @@
 							{/if}
 						</div>
 						{#if $ffmpegBanner.phase === 'loading'}
-							<div class="mt-3 h-1.5 overflow-hidden rounded-full bg-blue-500/20">
+							<div class="mt-3 h-1.5 overflow-hidden bg-[#003311]">
 								<div
-									class="h-full rounded-full bg-blue-400 transition-all duration-200"
+									class="h-full bg-[#00ff41] transition-all duration-200 shadow-[0_0_10px_rgba(0,255,65,0.5)]"
 									style="width: {Math.min(Math.max($ffmpegBanner.progress * 100, 6), 100)}%"
 								></div>
 							</div>
@@ -684,21 +684,21 @@
 				{/if}
 
 				{#each $activeTrackDownloads as task (task.id)}
-					<div class="pointer-events-auto rounded-2xl border border-gray-700/80 bg-gray-900/95 px-4 py-3 text-sm text-gray-100 shadow-xl backdrop-blur">
+					<div class="pointer-events-auto border border-[#00ff41] bg-black/95 px-4 py-3 text-sm shadow-[0_0_20px_rgba(0,255,65,0.3)] backdrop-blur">
 						<div class="flex items-start gap-3">
 							<div class="flex min-w-0 flex-1 flex-col gap-1">
-								<p class="flex items-center gap-2 text-sm font-semibold text-gray-50">
+								<p class="flex items-center gap-2 text-sm font-semibold text-[#00ff41] font-mono">
 									{#if task.progress < 0.02}
-										<LoaderCircle size={16} class="animate-spin text-blue-300" />
+										<LoaderCircle size={16} class="animate-spin text-[#00ff41]" />
 									{:else}
-										<Download size={16} class="text-blue-300" />
+										<Download size={16} class="text-[#00ff41]" />
 									{/if}
 									<span class="truncate">{task.title}</span>
 								</p>
 								{#if task.subtitle}
-									<p class="truncate text-xs text-gray-400">{task.subtitle}</p>
+									<p class="truncate text-xs text-[#006622] font-mono">{task.subtitle}</p>
 								{/if}
-								<div class="flex flex-wrap items-center gap-2 text-xs text-gray-400">
+								<div class="flex flex-wrap items-center gap-2 text-xs text-[#006622] font-mono">
 									<span>{formatTransferStatus(task.receivedBytes, task.totalBytes)}</span>
 									<span aria-hidden="true">•</span>
 									<span>{formatPercent(task.progress)}</span>
@@ -710,7 +710,7 @@
 										? downloadUiStore.cancelTrackDownload(task.id)
 										: downloadUiStore.dismissTrackTask(task.id)
 								}
-								class="rounded-full p-1 text-gray-400 transition-colors hover:bg-gray-800 hover:text-white"
+								class="p-1 text-[#006622] transition-all hover:text-[#00ff41]"
 								aria-label={task.cancellable
 									? `Cancel download for ${task.title}`
 									: `Dismiss download for ${task.title}`}
@@ -718,9 +718,9 @@
 								<X size={16} />
 							</button>
 						</div>
-						<div class="mt-3 h-1.5 overflow-hidden rounded-full bg-gray-800">
+						<div class="mt-3 h-1.5 overflow-hidden bg-[#003311]">
 							<div
-								class="h-full rounded-full bg-blue-500 transition-all duration-200"
+								class="h-full bg-[#00ff41] transition-all duration-200 shadow-[0_0_10px_rgba(0,255,65,0.5)]"
 								style="width: {Math.min(Math.max(task.progress * 100, 4), 100)}%"
 							></div>
 						</div>
