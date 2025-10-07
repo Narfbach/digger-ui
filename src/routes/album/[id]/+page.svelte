@@ -184,14 +184,14 @@
 					{#if album.artist}
 						<button
 							onclick={() => album?.artist && goto(`/artist/${album.artist.id}`)}
-							class="text-left text-xl text-gray-300 hover:text-white hover:underline"
+							class="text-left text-xl text-[#ff0033] hover:text-[#00ff41] font-mono transition-all"
 						>
 							{album.artist.name}
 						</button>
 					{/if}
 				</div>
 
-				<div class="mb-6 flex flex-wrap items-center gap-4 text-sm text-gray-400">
+				<div class="mb-6 flex flex-wrap items-center gap-4 text-sm text-[#006622] font-mono">
 					{#if album.releaseDate}
 						<div class="flex items-center gap-1">
 							<Calendar size={16} />
@@ -212,14 +212,14 @@
 					{/if}
 					<!--
 					{#if album.audioQuality}
-						<div class="rounded bg-blue-900/30 px-2 py-1 text-xs font-semibold text-blue-400">
+						<div class="border border-[#003311] bg-[#001100] px-2 py-1 text-xs font-semibold text-[#00ff41]">
 							{album.audioQuality}
 						</div>
 					{/if}
 					-->
 					{#if album.mediaMetadata?.tags}
 						{#each album.mediaMetadata.tags as tag}
-							<div class="rounded bg-blue-900/30 px-2 py-1 text-xs font-semibold text-blue-400">
+							<div class="border border-[#003311] bg-[#001100] px-2 py-1 text-xs font-semibold text-[#00ff41]">
 								{tag}
 							</div>
 						{/each}
@@ -230,21 +230,21 @@
 					<div class="flex flex-wrap items-center gap-3">
 						<button
 							onclick={handlePlayAll}
-							class="flex items-center gap-2 rounded-full bg-blue-600 px-8 py-3 font-semibold transition-colors hover:bg-blue-700"
+							class="flex items-center gap-2 border border-[#00ff41] bg-[#00ff41] px-8 py-3 font-mono font-semibold uppercase text-black transition-all hover:shadow-[0_0_20px_rgba(0,255,65,0.6)]"
 						>
 							<Play size={20} fill="currentColor" />
 							Play All
 						</button>
 						<button
 							onclick={handleShufflePlay}
-							class="flex items-center gap-2 rounded-full border border-purple-400/50 px-6 py-3 text-sm font-semibold text-purple-200 transition-colors hover:border-purple-300 hover:text-purple-100"
+							class="flex items-center gap-2 border border-[#003311] bg-black px-6 py-3 text-sm font-mono font-semibold text-[#00b82e] uppercase transition-all hover:border-[#00ff41] hover:text-[#00ff41]"
 						>
 							<Shuffle size={18} />
 							Shuffle Play
 						</button>
 						<button
 							onclick={handleDownloadAll}
-							class="flex items-center gap-2 rounded-full border border-blue-400/40 px-6 py-3 text-sm font-semibold text-blue-300 transition-colors hover:border-blue-400 hover:text-blue-200 disabled:cursor-not-allowed disabled:opacity-60"
+							class="flex items-center gap-2 border border-[#003311] bg-black px-6 py-3 text-sm font-mono font-semibold text-[#00b82e] uppercase transition-all hover:border-[#00ff41] hover:text-[#00ff41] disabled:cursor-not-allowed disabled:opacity-30"
 							disabled={isDownloadingAll}
 						>
 							<Download size={18} />
@@ -254,7 +254,7 @@
 						</button>
 					</div>
 					{#if downloadError}
-						<p class="mt-2 text-sm text-red-400">{downloadError}</p>
+						<p class="mt-2 text-sm text-[#ff0033] font-mono">{downloadError}</p>
 					{/if}
 				{/if}
 			</div>
@@ -262,10 +262,10 @@
 
 		<!-- Tracks -->
 		<div class="mt-8 space-y-4">
-			<h2 class="text-2xl font-bold">Tracks</h2>
+			<h2 class="text-2xl font-bold text-[#00ff41] font-mono uppercase">[ Tracks ]</h2>
 			<TrackList {tracks} showAlbum={false} />
 			{#if tracks.length === 0}
-				<div class="rounded-lg border border-yellow-900 bg-yellow-900/20 p-6 text-yellow-300">
+				<div class="border border-[#ff0033] bg-[#110000] p-6 text-[#ff0033] font-mono">
 					<p>
 						We couldn't find tracks for this album. Try refreshing or searching for individual
 						songs.
@@ -273,7 +273,7 @@
 				</div>
 			{/if}
 			{#if album.copyright}
-				<p class="pt-2 text-xs text-gray-500">{album.copyright}</p>
+				<p class="pt-2 text-xs text-[#003311] font-mono">{album.copyright}</p>
 			{/if}
 		</div>
 	</div>
