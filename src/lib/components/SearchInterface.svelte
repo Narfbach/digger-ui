@@ -45,9 +45,9 @@
 
 	const newsItems = [
 		{
-			title: 'Service Temporarily Unavailable',
+			title: 'Welcome to Digger',
 			description:
-				'We apologize for the inconvenience. The music database is currently experiencing technical difficulties. We are working to restore service as soon as possible. Thank you for your patience.'
+				'Stream and download lossless music. Search the database and start listening.'
 		}
 	];
 
