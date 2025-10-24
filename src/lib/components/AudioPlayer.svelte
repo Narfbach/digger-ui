@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { get } from 'svelte/store';
-	import { playerStore } from '$lib/stores/player';
-	import { lyricsStore } from '$lib/stores/lyrics';
+	import { playerStore, isVisible } from '$lib/stores/player';
 	import { losslessAPI } from '$lib/api';
 	import { getProxiedUrl } from '$lib/config';
 	import { downloadUiStore, ffmpegBanner, activeTrackDownloads } from '$lib/stores/downloadUi';
@@ -20,9 +19,10 @@
 		Trash2,
 		X,
 		Shuffle,
-		ScrollText,
 		Download,
-		LoaderCircle
+		LoaderCircle,
+		Minimize2,
+		Maximize2
 	} from 'lucide-svelte';
 
 	let audioElement: HTMLAudioElement;
@@ -627,10 +627,13 @@
 	class="hidden"
 ></audio>
 
+{#if $isVisible}
 <div
-	class="audio-player-backdrop fixed inset-x-0 bottom-0 z-50 px-4 pt-16 pb-5 sm:px-6 sm:pt-16 sm:pb-6 border-t border-[#003311]"
+	class="audio-player-backdrop fixed inset-x-0 bottom-0 z-50 px-3 pt-12 pb-3 sm:px-4 sm:pt-12 sm:pb-3 border-t border-[#003311] transition-all duration-500 ease-in-out"
 	bind:this={containerElement}
 	style="background: linear-gradient(to top, #000000 0%, #001100 100%);"
+	class:minimized={$playerStore.isMinimized}
+	transition:slide={{ duration: 500, easing: cubicOut }}
 >
 	<div class="relative mx-auto w-full max-w-screen-2xl">
 		{#if $ffmpegBanner.phase !== 'idle' || $activeTrackDownloads.length > 0}
@@ -729,154 +732,197 @@
 			</div>
 		</div>
 		{/if}
-		<div class="overflow-hidden border border-[#00ff41] bg-black shadow-[0_0_30px_rgba(0,255,65,0.3)]">
-			<div class="relative px-4 py-3">
+		<div class="overflow-hidden border border-[#00ff41] bg-black shadow-[0_0_30px_rgba(0,255,65,0.3)] transition-all duration-300 {$playerStore.isMinimized ? 'h-12' : ''}">
+			<div class="relative px-3 py-2">
 			{#if $playerStore.currentTrack}
-				<!-- Progress Bar -->
-				<div class="mb-3">
-					<button
-						onclick={handleSeek}
-						class="group relative h-1 w-full cursor-pointer overflow-hidden bg-[#003311]"
-						type="button"
-						aria-label="Seek position"
-					>
-						<div
-							class="pointer-events-none absolute inset-y-0 left-0 bg-[#00b82e]/20 transition-all"
-							style="width: {bufferedPercent}%"
-							aria-hidden="true"
-						></div>
-						<div
-							class="pointer-events-none absolute inset-y-0 left-0 bg-[#00ff41] transition-all shadow-[0_0_5px_rgba(0,255,65,0.5)]"
-							style="width: {getPercent($playerStore.currentTime, $playerStore.duration)}%"
-							aria-hidden="true"
-						></div>
-						<div
-							class="pointer-events-none absolute top-1/2 h-2 w-2 -translate-y-1/2 bg-[#00ff41] opacity-0 transition-opacity group-hover:opacity-100 shadow-[0_0_10px_rgba(0,255,65,0.8)]"
-							style="left: {getPercent($playerStore.currentTime, $playerStore.duration)}%"
-							aria-hidden="true"
-						></div>
-					</button>
-					<div class="mt-1 flex justify-between text-[10px] text-[#006622] font-mono">
-						<span>{formatTime($playerStore.currentTime)}</span>
-						<span>{formatTime($playerStore.duration)}</span>
-					</div>
-				</div>
-
-				<div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-					<!-- Track Info -->
-					<div class="flex min-w-0 items-center gap-3 sm:flex-1">
-						{#if $playerStore.currentTrack.album.cover}
-							<img
-								src={losslessAPI.getCoverUrl($playerStore.currentTrack.album.cover, '640')}
-								alt={$playerStore.currentTrack.title}
-								class="h-14 w-14 object-cover border border-[#00ff41] shadow-[0_0_10px_rgba(0,255,65,0.3)]"
-							/>
-						{/if}
-						<div class="min-w-0 flex-1">
-							<h3 class="truncate font-mono text-sm font-semibold text-[#00ff41]">
-								{$playerStore.currentTrack.title}
-							</h3>
-							<p class="truncate text-xs text-[#00b82e] font-mono">
-								{$playerStore.currentTrack.artist.name}
-							</p>
-							<p class="text-[10px] text-[#006622] font-mono">
-								{formatQualityLabel($playerStore.currentTrack.audioQuality)}
-							</p>
+				{#if $playerStore.isMinimized}
+					<!-- Mini Player -->
+					<div class="flex items-center justify-between gap-3">
+						<div class="flex min-w-0 items-center gap-2 flex-1">
+							{#if $playerStore.currentTrack.album.cover}
+								<img
+									src={losslessAPI.getCoverUrl($playerStore.currentTrack.album.cover, '80')}
+									alt={$playerStore.currentTrack.title}
+									class="h-8 w-8 object-cover border border-[#00ff41] shadow-[0_0_10px_rgba(0,255,65,0.3)]"
+								/>
+							{/if}
+							<div class="min-w-0 flex-1">
+								<h3 class="truncate font-mono text-xs font-semibold text-[#00ff41]">
+									{$playerStore.currentTrack.title}
+								</h3>
+								<p class="truncate text-[10px] text-[#00b82e] font-mono">
+									{$playerStore.currentTrack.artist.name}
+								</p>
+							</div>
 						</div>
-					</div>
 
-					<div class="flex flex-wrap items-center justify-between gap-3 sm:flex-nowrap sm:justify-end sm:gap-4">
-						<!-- Controls -->
-						<div class="flex w-full flex-1 items-center justify-center gap-2 sm:w-auto sm:flex-none sm:justify-center">
-							<button
-								onclick={() => playerStore.previous()}
-								class="p-2 text-[#006622] transition-all hover:text-[#00ff41] disabled:opacity-30"
-								disabled={$playerStore.queueIndex <= 0}
-								aria-label="Previous track"
-							>
-								<SkipBack size={20} />
-							</button>
-
+						<div class="flex items-center gap-1.5">
 							<button
 								onclick={() => playerStore.togglePlay()}
-								class="rounded-full border border-[#00ff41] bg-[#00ff41] p-3 text-black transition-all hover:shadow-[0_0_20px_rgba(0,255,65,0.6)]"
+								class="rounded-full border border-[#00ff41] bg-[#00ff41] p-1.5 text-black transition-all hover:shadow-[0_0_20px_rgba(0,255,65,0.6)]"
 								aria-label={$playerStore.isPlaying ? 'Pause' : 'Play'}
 							>
 								{#if $playerStore.isPlaying}
-									<Pause size={24} fill="currentColor" />
+									<Pause size={16} fill="currentColor" />
 								{:else}
-									<Play size={24} fill="currentColor" />
+									<Play size={16} fill="currentColor" />
 								{/if}
 							</button>
 
 							<button
-								onclick={() => playerStore.next()}
-								class="p-2 text-[#006622] transition-all hover:text-[#00ff41] disabled:opacity-30"
-								disabled={$playerStore.queueIndex >= $playerStore.queue.length - 1}
-								aria-label="Next track"
-							>
-								<SkipForward size={20} />
-							</button>
-						</div>
-
-						<!-- Queue Toggle -->
-						<div class="flex items-center gap-2 sm:flex-none">
-							<!--
-							<button
-								onclick={() => lyricsStore.toggle()}
-								class="flex items-center gap-2 rounded-full border border-gray-700/70 bg-gray-900/60 px-3 py-2 text-sm text-gray-300 transition-colors hover:border-blue-500 hover:text-white {$lyricsStore.open
-									? 'border-blue-500 text-white'
-									: ''}"
-								aria-label={$lyricsStore.open ? 'Hide lyrics popup' : 'Show lyrics popup'}
-								aria-expanded={$lyricsStore.open}
+								onclick={() => playerStore.toggleMinimize()}
+								class="flex items-center gap-1.5 rounded-full border border-gray-700/70 bg-gray-900/60 px-2 py-1 text-xs text-gray-300 transition-colors hover:border-blue-500 hover:text-white"
+								aria-label="Maximize player"
 								type="button"
 							>
-							<ScrollText size={18} />
-							<span class="hidden sm:inline">Lyrics</span>
-						</button>
-						-->
-							<button
-								onclick={toggleQueuePanel}
-								class="flex items-center gap-2 rounded-full border border-gray-700/70 bg-gray-900/60 px-3 py-2 text-sm text-gray-300 transition-colors hover:border-blue-500 hover:text-white {showQueuePanel
-									? 'border-blue-500 text-white'
-									: ''}"
-								aria-label="Toggle queue panel"
-								aria-expanded={showQueuePanel}
-								type="button"
-							>
-								<ListMusic size={18} />
-								<span class="hidden sm:inline">Queue ({$playerStore.queue.length})</span>
+								<Maximize2 size={14} />
+								<span class="hidden sm:inline">Maximize</span>
 							</button>
-						</div>
-
-						<!-- Volume Control -->
-						<div class="flex items-center gap-2 sm:flex-none">
-							<button
-								onclick={toggleMute}
-								class="p-2 text-gray-400 transition-colors hover:text-white"
-								aria-label={isMuted ? 'Unmute' : 'Mute'}
-							>
-								{#if isMuted || $playerStore.volume === 0}
-									<VolumeX size={20} />
-								{:else}
-									<Volume2 size={20} />
-								{/if}
-							</button>
-							<input
-								type="range"
-								min="0"
-								max="1"
-								step="0.01"
-								value={$playerStore.volume}
-								oninput={handleVolumeChange}
-								class="hidden h-1 w-24 cursor-pointer appearance-none rounded-lg bg-gray-700 accent-white sm:block"
-								aria-label="Volume"
-							/>
 						</div>
 					</div>
-				</div>
+				{:else}
+					<!-- Full Player -->
+					<!-- Progress Bar -->
+					<div class="mb-2">
+						<button
+							onclick={handleSeek}
+							class="group relative h-0.5 w-full cursor-pointer overflow-hidden bg-[#003311]"
+							type="button"
+							aria-label="Seek position"
+						>
+							<div
+								class="pointer-events-none absolute inset-y-0 left-0 bg-[#00b82e]/20 transition-all"
+								style="width: {bufferedPercent}%"
+								aria-hidden="true"
+							></div>
+							<div
+								class="pointer-events-none absolute inset-y-0 left-0 bg-[#00ff41] transition-all shadow-[0_0_5px_rgba(0,255,65,0.5)]"
+								style="width: {getPercent($playerStore.currentTime, $playerStore.duration)}%"
+								aria-hidden="true"
+							></div>
+							<div
+								class="pointer-events-none absolute top-1/2 h-1.5 w-1.5 -translate-y-1/2 bg-[#00ff41] opacity-0 transition-opacity group-hover:opacity-100 shadow-[0_0_10px_rgba(0,255,65,0.8)]"
+								style="left: {getPercent($playerStore.currentTime, $playerStore.duration)}%"
+								aria-hidden="true"
+							></div>
+						</button>
+						<div class="mt-0.5 flex justify-between text-[9px] text-[#006622] font-mono">
+							<span>{formatTime($playerStore.currentTime)}</span>
+							<span>{formatTime($playerStore.duration)}</span>
+						</div>
+					</div>
 
-				{#if showQueuePanel}
+					<div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+						<!-- Track Info -->
+						<div class="flex min-w-0 items-center gap-2 sm:flex-1">
+							{#if $playerStore.currentTrack.album.cover}
+								<img
+									src={losslessAPI.getCoverUrl($playerStore.currentTrack.album.cover, '640')}
+									alt={$playerStore.currentTrack.title}
+									class="h-10 w-10 object-cover border border-[#00ff41] shadow-[0_0_10px_rgba(0,255,65,0.3)]"
+								/>
+							{/if}
+							<div class="min-w-0 flex-1">
+								<h3 class="truncate font-mono text-xs font-semibold text-[#00ff41]">
+									{$playerStore.currentTrack.title}
+								</h3>
+								<p class="truncate text-[10px] text-[#00b82e] font-mono">
+									{$playerStore.currentTrack.artist.name}
+								</p>
+								<p class="text-[9px] text-[#006622] font-mono">
+									{formatQualityLabel($playerStore.currentTrack.audioQuality)}
+								</p>
+							</div>
+						</div>
+
+						<div class="flex flex-wrap items-center justify-between gap-2 sm:flex-nowrap sm:justify-end sm:gap-3">
+							<!-- Controls -->
+							<div class="flex w-full flex-1 items-center justify-center gap-1.5 sm:w-auto sm:flex-none sm:justify-center">
+								<button
+									onclick={() => playerStore.previous()}
+									class="p-1.5 text-[#006622] transition-all hover:text-[#00ff41] disabled:opacity-30"
+									disabled={$playerStore.queueIndex <= 0}
+									aria-label="Previous track"
+								>
+									<SkipBack size={16} />
+								</button>
+
+								<button
+									onclick={() => playerStore.togglePlay()}
+									class="rounded-full border border-[#00ff41] bg-[#00ff41] p-2 text-black transition-all hover:shadow-[0_0_20px_rgba(0,255,65,0.6)]"
+									aria-label={$playerStore.isPlaying ? 'Pause' : 'Play'}
+								>
+									{#if $playerStore.isPlaying}
+										<Pause size={18} fill="currentColor" />
+									{:else}
+										<Play size={18} fill="currentColor" />
+									{/if}
+								</button>
+
+								<button
+									onclick={() => playerStore.next()}
+									class="p-1.5 text-[#006622] transition-all hover:text-[#00ff41] disabled:opacity-30"
+									disabled={$playerStore.queueIndex >= $playerStore.queue.length - 1}
+									aria-label="Next track"
+								>
+									<SkipForward size={16} />
+								</button>
+							</div>
+
+							<!-- Queue Toggle -->
+							<div class="flex items-center gap-1.5 sm:flex-none">
+								<button
+									onclick={() => playerStore.toggleMinimize()}
+									class="flex items-center gap-1.5 rounded-full border border-gray-700/70 bg-gray-900/60 px-2 py-1 text-xs text-gray-300 transition-colors hover:border-blue-500 hover:text-white"
+									aria-label="Minimize player"
+									type="button"
+								>
+									<Minimize2 size={14} />
+									<span class="hidden sm:inline">Minimize</span>
+								</button>
+								<button
+									onclick={toggleQueuePanel}
+									class="flex items-center gap-1.5 rounded-full border border-gray-700/70 bg-gray-900/60 px-2 py-1 text-xs text-gray-300 transition-colors hover:border-blue-500 hover:text-white {showQueuePanel
+										? 'border-blue-500 text-white'
+										: ''}"
+									aria-label="Toggle queue panel"
+									aria-expanded={showQueuePanel}
+									type="button"
+								>
+									<ListMusic size={14} />
+									<span class="hidden sm:inline">Queue ({$playerStore.queue.length})</span>
+								</button>
+							</div>
+
+							<!-- Volume Control -->
+							<div class="flex items-center gap-1.5 sm:flex-none">
+								<button
+									onclick={toggleMute}
+									class="p-1.5 text-gray-400 transition-colors hover:text-white"
+									aria-label={isMuted ? 'Unmute' : 'Mute'}
+								>
+									{#if isMuted || $playerStore.volume === 0}
+										<VolumeX size={16} />
+									{:else}
+										<Volume2 size={16} />
+									{/if}
+								</button>
+								<input
+									type="range"
+									min="0"
+									max="1"
+									step="0.01"
+									value={$playerStore.volume}
+									oninput={handleVolumeChange}
+									class="hidden h-0.5 w-20 cursor-pointer appearance-none rounded-lg bg-gray-700 accent-white sm:block"
+									aria-label="Volume"
+								/>
+							</div>
+						</div>
+					</div>
+				{/if}
+
+				{#if showQueuePanel && !$playerStore.isMinimized}
 					<div
 						class="mt-4 space-y-3 rounded-2xl border border-gray-800/80 bg-neutral-900/90 p-4 text-sm shadow-inner"
 						transition:slide={{ duration: 220, easing: cubicOut }}
@@ -972,7 +1018,7 @@
 					</div>
 				{/if}
 
-				{#if $playerStore.currentTrack && $playerStore.isLoading}
+				{#if $playerStore.currentTrack && $playerStore.isLoading && !$playerStore.isMinimized}
 					<div class="loading-overlay">
 						<div class="loading-equalizer" aria-hidden="true">
 							<span class="bar" style="animation-delay: 0ms"></span>
@@ -991,7 +1037,7 @@
 		</div>
 	</div>
 </div>
-</div>
+{/if}
 
 <style>
 	.audio-player-backdrop {
@@ -1012,6 +1058,21 @@
 	.audio-player-backdrop > * {
 		position: relative;
 		z-index: 1;
+	}
+
+	.audio-player-backdrop.minimized {
+		padding-top: 0.5rem;
+		padding-bottom: 0.5rem;
+	}
+
+	.audio-player-backdrop {
+		transform: translateY(0);
+		opacity: 1;
+	}
+
+	.audio-player-backdrop.hidden {
+		transform: translateY(100%);
+		opacity: 0;
 	}
 
 	input[type='range']::-webkit-slider-thumb {

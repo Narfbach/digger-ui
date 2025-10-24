@@ -12,6 +12,8 @@ interface PlayerState {
 	isLoading: boolean;
 	queue: Track[];
 	queueIndex: number;
+	isMinimized: boolean;
+	isVisible: boolean;
 }
 
 const initialState: PlayerState = {
@@ -23,7 +25,9 @@ const initialState: PlayerState = {
 	quality: 'LOSSLESS',
 	isLoading: false,
 	queue: [],
-	queueIndex: -1
+	queueIndex: -1,
+	isMinimized: false,
+	isVisible: false
 };
 
 function createPlayerStore() {
@@ -36,7 +40,8 @@ function createPlayerStore() {
 				...state,
 				currentTrack: track,
 				duration: track.duration,
-				isLoading: true
+				isLoading: true,
+				isVisible: true
 			})),
 		play: () => update((state) => ({ ...state, isPlaying: true })),
 		pause: () => update((state) => ({ ...state, isPlaying: false })),
@@ -54,7 +59,8 @@ function createPlayerStore() {
 				currentTrack: queue[startIndex] || null,
 				isPlaying: queue.length > 0 ? state.isPlaying : false,
 				isLoading: queue.length > 0,
-				currentTime: queue.length > 0 ? state.currentTime : 0
+				currentTime: queue.length > 0 ? state.currentTime : 0,
+				isVisible: queue.length > 0 ? true : state.isVisible
 			})),
 		enqueue: (track: Track) =>
 			update((state) => {
@@ -68,7 +74,8 @@ function createPlayerStore() {
 						isPlaying: true,
 						isLoading: true,
 						currentTime: 0,
-						duration: track.duration
+						duration: track.duration,
+						isVisible: true
 					};
 				}
 
@@ -91,7 +98,8 @@ function createPlayerStore() {
 						isPlaying: true,
 						isLoading: true,
 						currentTime: 0,
-						duration: track.duration
+						duration: track.duration,
+						isVisible: true
 					};
 				}
 
@@ -264,6 +272,9 @@ function createPlayerStore() {
 				currentTime: 0,
 				duration: 0
 			})),
+		toggleMinimize: () => update((state) => ({ ...state, isMinimized: !state.isMinimized })),
+		setMinimized: (isMinimized: boolean) => update((state) => ({ ...state, isMinimized })),
+		setVisible: (isVisible: boolean) => update((state) => ({ ...state, isVisible })),
 		reset: () => set(initialState)
 	};
 }
@@ -279,3 +290,5 @@ export const volume = derived(playerStore, ($store) => $store.volume);
 export const progress = derived(playerStore, ($store) =>
 	$store.duration > 0 ? ($store.currentTime / $store.duration) * 100 : 0
 );
+export const isMinimized = derived(playerStore, ($store) => $store.isMinimized);
+export const isVisible = derived(playerStore, ($store) => $store.isVisible);

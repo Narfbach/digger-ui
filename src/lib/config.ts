@@ -11,7 +11,7 @@ export interface ApiClusterTarget {
 const TARGETS = [
 	{
 		name: 'proxied-primary',
-		baseUrl: 'https://tidal.401658.xyz',
+		baseUrl: 'https://hifi.401658.xyz',
 		weight: 40,
 		requiresProxy: false
 	},
@@ -32,7 +32,7 @@ const TARGETS = [
 export const API_CONFIG = {
 	// Cluster of target endpoints for load distribution and redundancy
 	targets: TARGETS,
-	baseUrl: TARGETS[0]?.baseUrl ?? 'https://tidal.401658.xyz',
+	baseUrl: TARGETS[0]?.baseUrl ?? 'https://hifi.401658.xyz',
 	// Proxy configuration for endpoints that need it
 	useProxy: true,
 	proxyUrl: '/api/proxy'
