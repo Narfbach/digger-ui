@@ -922,7 +922,13 @@
 					</div>
 				{/if}
 
-				{#if showQueuePanel && !$playerStore.isMinimized}
+			{:else}
+				<div class="flex h-20 items-center justify-center text-sm text-gray-400">
+					Nothing is playing
+				</div>
+			{/if}
+
+			{#if $playerStore.currentTrack && showQueuePanel && !$playerStore.isMinimized}
 					<div
 						class="mt-4 space-y-3 rounded-2xl border border-gray-800/80 bg-neutral-900/90 p-4 text-sm shadow-inner"
 						transition:slide={{ duration: 220, easing: cubicOut }}
@@ -1029,11 +1035,7 @@
 						<p class="text-sm font-medium text-gray-200">Loading track…</p>
 					</div>
 				{/if}
-			{:else}
-				<div class="flex h-20 items-center justify-center text-sm text-gray-400">
-					Nothing is playing
-				</div>
-			{/if}
+			</div>
 		</div>
 	</div>
 </div>
