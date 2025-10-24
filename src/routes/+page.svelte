@@ -52,9 +52,7 @@
 			<div class="h-px w-16 bg-[#00ff41] opacity-50"></div>
 		</div>
 
-		<p class="mx-auto max-w-2xl text-base text-[#006622] font-mono uppercase tracking-wider">
-			{data.slogan}
-		</p>
+
 
 		<!-- Version badge -->
 		<div class="mt-6 inline-block px-4 py-1 border border-[#003311] bg-[#001100] text-[#00b82e] text-xs font-mono">
