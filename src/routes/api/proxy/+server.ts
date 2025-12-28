@@ -309,7 +309,7 @@ export const GET: RequestHandler = async ({ url, request, fetch }) => {
 	});
 
 	if (!upstreamHeaders.has('User-Agent')) {
-		upstreamHeaders.set('User-Agent', 'Mozilla/5.0 (compatible; TIDAL-UI/1.0)');
+		upstreamHeaders.set('User-Agent', 'Mozilla/5.0 (compatible; Digger/1.0)');
 	}
 
 	// Force identity encoding so the upstream sends plain data that Node can forward without zstd artifacts.

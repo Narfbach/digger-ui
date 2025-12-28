@@ -111,7 +111,7 @@
 
 	function timestampedFilename(extension: string): string {
 		const stamp = new Date().toISOString().replace(/[:.]/g, '-');
-		return `tidal-export-${stamp}.${extension}`;
+		return `digger-export-${stamp}.${extension}`;
 	}
 
 	async function downloadQueueAsZip(tracks: Track[], quality: AudioQuality): Promise<void> {
