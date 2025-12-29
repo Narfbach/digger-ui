@@ -12,6 +12,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Replaced obsolete endpoints (hifi.401658.xyz, tidal-api-3.binimum.org)
   - Added new cluster: triton.squid.wtf, tidal.kinoplus.online, qqdl.site endpoints
   - Search for tracks, albums, artists, and playlists now working again
+- **CRITICAL**: Updated API implementation to support v2.0 format (playback functionality restored)
+  - Replaced outdated `api.ts` with latest version from upstream
+  - Added support for DASH manifests and new track response format
+  - Fixed stream URL extraction for all quality levels
+  - Music playback now works correctly
 
 ### Planned
 - Offline playback with IndexedDB storage
