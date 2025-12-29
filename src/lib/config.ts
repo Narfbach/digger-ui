@@ -1,74 +1,100 @@
+import { APP_VERSION } from '$lib/version';
+
 // CORS Proxy Configuration
 // If you're experiencing CORS issues with the HIFI API, you can set up a proxy
+
+type RegionPreference = 'auto' | 'us' | 'eu';
 
 export interface ApiClusterTarget {
 	name: string;
 	baseUrl: string;
 	weight: number;
 	requiresProxy: boolean;
+	category: 'auto-only';
 }
 
-const TARGETS = [
+const V2_API_TARGETS = [
 	{
 		name: 'squid-api',
 		baseUrl: 'https://triton.squid.wtf',
 		weight: 30,
-		requiresProxy: false
+		requiresProxy: false,
+		category: 'auto-only'
 	},
 	{
 		name: 'kinoplus',
 		baseUrl: 'https://tidal.kinoplus.online',
 		weight: 20,
-		requiresProxy: false
+		requiresProxy: false,
+		category: 'auto-only'
 	},
 	{
 		name: 'binimum',
 		baseUrl: 'https://tidal-api.binimum.org',
 		weight: 10,
-		requiresProxy: false
+		requiresProxy: false,
+		category: 'auto-only'
 	},
 	{
 		name: 'binimum-2',
 		baseUrl: 'https://tidal-api-2.binimum.org',
 		weight: 10,
-		requiresProxy: false
+		requiresProxy: false,
+		category: 'auto-only'
 	},
 	{
 		name: 'hund',
 		baseUrl: 'https://hund.qqdl.site',
 		weight: 15,
-		requiresProxy: false
+		requiresProxy: false,
+		category: 'auto-only'
 	},
 	{
 		name: 'katze',
 		baseUrl: 'https://katze.qqdl.site',
 		weight: 15,
-		requiresProxy: false
+		requiresProxy: false,
+		category: 'auto-only'
 	},
 	{
 		name: 'maus',
 		baseUrl: 'https://maus.qqdl.site',
 		weight: 15,
-		requiresProxy: false
+		requiresProxy: false,
+		category: 'auto-only'
 	},
 	{
 		name: 'vogel',
 		baseUrl: 'https://vogel.qqdl.site',
 		weight: 15,
-		requiresProxy: false
+		requiresProxy: false,
+		category: 'auto-only'
 	},
 	{
 		name: 'wolf',
 		baseUrl: 'https://wolf.qqdl.site',
 		weight: 15,
-		requiresProxy: false
+		requiresProxy: false,
+		category: 'auto-only'
 	}
 ] satisfies ApiClusterTarget[];
+
+const ALL_API_TARGETS = [
+	...V2_API_TARGETS
+] satisfies ApiClusterTarget[];
+const US_API_TARGETS = [] satisfies ApiClusterTarget[];
+const TARGET_COLLECTIONS: Record<RegionPreference, ApiClusterTarget[]> = {
+	auto: [...ALL_API_TARGETS],
+	eu: [],
+	us: [...US_API_TARGETS]
+};
+
+const TARGETS = TARGET_COLLECTIONS.auto;
 
 export const API_CONFIG = {
 	// Cluster of target endpoints for load distribution and redundancy
 	targets: TARGETS,
-	baseUrl: TARGETS[0]?.baseUrl ?? 'https://triton.squid.wtf',
+	baseUrl: TARGETS[0]?.baseUrl ?? 'https://tidal.401658.xyz',
 	// Proxy configuration for endpoints that need it
 	useProxy: true,
 	proxyUrl: '/api/proxy'
@@ -76,10 +102,11 @@ export const API_CONFIG = {
 
 type WeightedTarget = ApiClusterTarget & { cumulativeWeight: number };
 
-let weightedTargets: WeightedTarget[] | null = null;
+let v1WeightedTargets: WeightedTarget[] | null = null;
+let v2WeightedTargets: WeightedTarget[] | null = null;
 
-function buildWeightedTargets(): WeightedTarget[] {
-	const validTargets = API_CONFIG.targets.filter((target) => {
+function buildWeightedTargets(targets: ApiClusterTarget[]): WeightedTarget[] {
+	const validTargets = targets.filter((target) => {
 		if (!target?.baseUrl || typeof target.baseUrl !== 'string') {
 			return false;
 		}
@@ -108,22 +135,76 @@ function buildWeightedTargets(): WeightedTarget[] {
 	return collected;
 }
 
-function ensureWeightedTargets(): WeightedTarget[] {
-	if (!weightedTargets) {
-		weightedTargets = buildWeightedTargets();
+function ensureWeightedTargets(apiVersion: 'v1' | 'v2' = 'v2'): WeightedTarget[] {
+	if (apiVersion === 'v2') {
+		if (!v2WeightedTargets) {
+			v2WeightedTargets = buildWeightedTargets(V2_API_TARGETS);
+		}
+		return v2WeightedTargets;
+	} else {
+		if (!v1WeightedTargets) {
+			// v1 includes ALL_API_TARGETS (v1) + V2_API_TARGETS (fallback with low weight)
+			const v2Fallback = V2_API_TARGETS.map((t) => ({ ...t, weight: 1 }));
+			v1WeightedTargets = buildWeightedTargets([...ALL_API_TARGETS, ...v2Fallback]);
+		}
+		return v1WeightedTargets;
 	}
-	return weightedTargets;
 }
 
-export function selectApiTarget(): ApiClusterTarget {
-	const targets = ensureWeightedTargets();
-	const totalWeight = targets[targets.length - 1]?.cumulativeWeight ?? 0;
+export function selectApiTarget(apiVersion: 'v1' | 'v2' = 'v2'): ApiClusterTarget {
+	const targets = ensureWeightedTargets(apiVersion);
+	return selectFromWeightedTargets(targets);
+}
+
+export function getPrimaryTarget(apiVersion: 'v1' | 'v2' = 'v2'): ApiClusterTarget {
+	return ensureWeightedTargets(apiVersion)[0];
+}
+
+function selectFromWeightedTargets(weighted: WeightedTarget[]): ApiClusterTarget {
+	if (weighted.length === 0) {
+		throw new Error('No weighted targets available for selection');
+	}
+
+	const totalWeight = weighted[weighted.length - 1]?.cumulativeWeight ?? 0;
+	if (totalWeight <= 0) {
+		return weighted[0];
+	}
+
 	const random = Math.random() * totalWeight;
-	return targets.find((target) => random < target.cumulativeWeight) ?? targets[0];
+	for (const target of weighted) {
+		if (random < target.cumulativeWeight) {
+			return target;
+		}
+	}
+
+	return weighted[0];
 }
 
-export function getPrimaryTarget(): ApiClusterTarget {
-	return ensureWeightedTargets()[0];
+export function getTargetsForRegion(region: RegionPreference = 'auto'): ApiClusterTarget[] {
+	const targets = TARGET_COLLECTIONS[region];
+	return Array.isArray(targets) ? targets : [];
+}
+
+export function selectApiTargetForRegion(region: RegionPreference): ApiClusterTarget {
+	if (region === 'auto') {
+		return selectApiTarget();
+	}
+
+	const targets = getTargetsForRegion(region);
+	if (targets.length === 0) {
+		return selectApiTarget();
+	}
+
+	const weighted = buildWeightedTargets(targets);
+	return selectFromWeightedTargets(weighted);
+}
+
+export function hasRegionTargets(region: RegionPreference): boolean {
+	if (region === 'auto') {
+		return TARGET_COLLECTIONS.auto.length > 0;
+	}
+
+	return getTargetsForRegion(region).length > 0;
 }
 
 function parseTargetBase(target: ApiClusterTarget): URL | null {
@@ -322,10 +403,17 @@ async function isUnexpectedProxyResponse(response: Response): Promise<boolean> {
 	}
 }
 
+function isV2Target(target: ApiClusterTarget): boolean {
+	return V2_API_TARGETS.some((t) => t.name === target.name);
+}
+
 /**
  * Fetch with CORS handling
  */
-export async function fetchWithCORS(url: string, options?: RequestInit): Promise<Response> {
+export async function fetchWithCORS(
+	url: string,
+	options?: RequestInit & { apiVersion?: 'v1' | 'v2'; preferredQuality?: string }
+): Promise<Response> {
 	const resolvedUrl = resolveUrl(url);
 	if (!resolvedUrl) {
 		throw new Error(`Unable to resolve URL: ${url}`);
@@ -338,16 +426,17 @@ export async function fetchWithCORS(url: string, options?: RequestInit): Promise
 		});
 	}
 
-	const weightedTargets = ensureWeightedTargets();
+	const apiVersion = options?.apiVersion ?? 'v2';
+	const weightedTargets = ensureWeightedTargets(apiVersion);
 	const attemptOrder: ApiClusterTarget[] = [];
 	if (shouldPreferPrimaryTarget(resolvedUrl)) {
-		const primary = getPrimaryTarget();
+		const primary = getPrimaryTarget(apiVersion);
 		if (!attemptOrder.some((candidate) => candidate.name === primary.name)) {
 			attemptOrder.push(primary);
 		}
 	}
 
-	const selected = selectApiTarget();
+	const selected = selectApiTarget(apiVersion);
 	if (!attemptOrder.some((candidate) => candidate.name === selected.name)) {
 		attemptOrder.push(selected);
 	}
@@ -363,7 +452,7 @@ export async function fetchWithCORS(url: string, options?: RequestInit): Promise
 	);
 
 	if (uniqueTargets.length === 0) {
-		uniqueTargets = [getPrimaryTarget()];
+		uniqueTargets = [getPrimaryTarget(apiVersion)];
 	}
 
 	const originBase = parseTargetBase(originTarget);
@@ -389,11 +478,34 @@ export async function fetchWithCORS(url: string, options?: RequestInit): Promise
 			rewrittenPath + resolvedUrl.search + resolvedUrl.hash,
 			targetBase.origin
 		);
+
+		// If we are falling back to a v2 target and have a preferred quality (e.g. HI_RES_LOSSLESS),
+		// upgrade the quality parameter in the URL.
+		if (
+			isV2Target(target) &&
+			options?.preferredQuality &&
+			rewrittenUrl.searchParams.has('quality')
+		) {
+			rewrittenUrl.searchParams.set('quality', options.preferredQuality);
+		}
+
 		const finalUrl = getProxiedUrl(rewrittenUrl.toString());
+
+		const headers = new Headers(options?.headers);
+		const isCustom =
+			[...V2_API_TARGETS].some((t) => t.name === target.name) &&
+			!target.baseUrl.includes('tidal.com') &&
+			!target.baseUrl.includes('api.tidal.com') &&
+			!target.baseUrl.includes('monochrome.tf');
+
+		if (isCustom) {
+			headers.set('X-Client', `BiniLossless/${APP_VERSION}`);
+		}
 
 		try {
 			const response = await fetch(finalUrl, {
-				...options
+				...options,
+				headers
 			});
 			if (response.ok) {
 				const unexpected = await isUnexpectedProxyResponse(response);
