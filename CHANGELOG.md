@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- **CRITICAL**: Updated API endpoints to new working URLs (search functionality restored)
+  - Replaced obsolete endpoints (hifi.401658.xyz, tidal-api-3.binimum.org)
+  - Added new cluster: triton.squid.wtf, tidal.kinoplus.online, qqdl.site endpoints
+  - Search for tracks, albums, artists, and playlists now working again
+
 ### Planned
 - Offline playback with IndexedDB storage
 - User authentication and library sync

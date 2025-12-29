@@ -10,29 +10,65 @@ export interface ApiClusterTarget {
 
 const TARGETS = [
 	{
-		name: 'proxied-primary',
-		baseUrl: 'https://hifi.401658.xyz',
-		weight: 40,
+		name: 'squid-api',
+		baseUrl: 'https://triton.squid.wtf',
+		weight: 30,
 		requiresProxy: false
 	},
 	{
-		name: 'vercel-fastapi',
-		baseUrl: 'https://tidal-api-2.binimum.org',
-		weight: 40,
-		requiresProxy: false
-	},
-	{
-		name: 'wardrobe',
-		baseUrl: 'https://tidal-api-3.binimum.org',
+		name: 'kinoplus',
+		baseUrl: 'https://tidal.kinoplus.online',
 		weight: 20,
 		requiresProxy: false
 	},
+	{
+		name: 'binimum',
+		baseUrl: 'https://tidal-api.binimum.org',
+		weight: 10,
+		requiresProxy: false
+	},
+	{
+		name: 'binimum-2',
+		baseUrl: 'https://tidal-api-2.binimum.org',
+		weight: 10,
+		requiresProxy: false
+	},
+	{
+		name: 'hund',
+		baseUrl: 'https://hund.qqdl.site',
+		weight: 15,
+		requiresProxy: false
+	},
+	{
+		name: 'katze',
+		baseUrl: 'https://katze.qqdl.site',
+		weight: 15,
+		requiresProxy: false
+	},
+	{
+		name: 'maus',
+		baseUrl: 'https://maus.qqdl.site',
+		weight: 15,
+		requiresProxy: false
+	},
+	{
+		name: 'vogel',
+		baseUrl: 'https://vogel.qqdl.site',
+		weight: 15,
+		requiresProxy: false
+	},
+	{
+		name: 'wolf',
+		baseUrl: 'https://wolf.qqdl.site',
+		weight: 15,
+		requiresProxy: false
+	}
 ] satisfies ApiClusterTarget[];
 
 export const API_CONFIG = {
 	// Cluster of target endpoints for load distribution and redundancy
 	targets: TARGETS,
-	baseUrl: TARGETS[0]?.baseUrl ?? 'https://hifi.401658.xyz',
+	baseUrl: TARGETS[0]?.baseUrl ?? 'https://triton.squid.wtf',
 	// Proxy configuration for endpoints that need it
 	useProxy: true,
 	proxyUrl: '/api/proxy'
