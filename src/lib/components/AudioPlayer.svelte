@@ -628,417 +628,433 @@
 ></audio>
 
 {#if $isVisible}
-<div
-	class="audio-player-backdrop fixed inset-x-0 bottom-0 z-50 px-3 pt-12 pb-3 sm:px-4 sm:pt-12 sm:pb-3 border-t border-[#003311] transition-all duration-500 ease-in-out"
-	bind:this={containerElement}
-	style="background: linear-gradient(to top, #000000 0%, #001100 100%);"
-	class:minimized={$playerStore.isMinimized}
-	transition:slide={{ duration: 500, easing: cubicOut }}
->
-	<div class="relative mx-auto w-full max-w-screen-2xl">
-		{#if $ffmpegBanner.phase !== 'idle' || $activeTrackDownloads.length > 0}
-			<div class="pointer-events-none absolute left-0 right-0 top-0 -translate-y-full transform pb-4">
-				<div class="mx-auto flex w-full max-w-2xl flex-col gap-2 px-4">
-					{#if $ffmpegBanner.phase !== 'idle'}
-						<div class="pointer-events-auto border border-[#00ff41] bg-black/95 px-4 py-3 text-sm shadow-[0_0_20px_rgba(0,255,65,0.3)] backdrop-blur">
-						<div class="flex items-start gap-3">
-							<div class="flex-1 min-w-0">
-								<p class="font-semibold leading-5 text-[#00ff41] font-mono">
-									[ DOWNLOADING FFMPEG ]
-									{#if formatMegabytes($ffmpegBanner.totalBytes)}
-										<span class="text-[#00b82e]"> ({formatMegabytes($ffmpegBanner.totalBytes)})</span>
+	<div
+		class="audio-player-backdrop fixed inset-x-0 bottom-0 z-50 border-t border-[#003311] px-3 pt-12 pb-3 transition-all duration-500 ease-in-out sm:px-4 sm:pt-12 sm:pb-3"
+		bind:this={containerElement}
+		style="background: linear-gradient(to top, #000000 0%, #001100 100%);"
+		class:minimized={$playerStore.isMinimized}
+		transition:slide={{ duration: 500, easing: cubicOut }}
+	>
+		<div class="relative mx-auto w-full max-w-screen-2xl">
+			{#if $ffmpegBanner.phase !== 'idle' || $activeTrackDownloads.length > 0}
+				<div
+					class="pointer-events-none absolute top-0 right-0 left-0 -translate-y-full transform pb-4"
+				>
+					<div class="mx-auto flex w-full max-w-2xl flex-col gap-2 px-4">
+						{#if $ffmpegBanner.phase !== 'idle'}
+							<div
+								class="pointer-events-auto border border-[#00ff41] bg-black/95 px-4 py-3 text-sm shadow-[0_0_20px_rgba(0,255,65,0.3)] backdrop-blur"
+							>
+								<div class="flex items-start gap-3">
+									<div class="min-w-0 flex-1">
+										<p class="font-mono leading-5 font-semibold text-[#00ff41]">
+											[ DOWNLOADING FFMPEG ]
+											{#if formatMegabytes($ffmpegBanner.totalBytes)}
+												<span class="text-[#00b82e]">
+													({formatMegabytes($ffmpegBanner.totalBytes)})</span
+												>
+											{/if}
+										</p>
+										{#if $ffmpegBanner.phase === 'countdown'}
+											<p class="mt-1 font-mono text-xs text-[#00b82e]">
+												Starting in {$ffmpegBanner.countdownSeconds} seconds…
+											</p>
+										{:else if $ffmpegBanner.phase === 'loading'}
+											<p class="mt-1 font-mono text-xs text-[#00b82e]">
+												Preparing encoder… {formatPercent($ffmpegBanner.progress)}
+											</p>
+										{:else if $ffmpegBanner.phase === 'ready'}
+											<p class="mt-1 font-mono text-xs text-[#00b82e]">[ READY ]</p>
+										{:else if $ffmpegBanner.phase === 'error'}
+											<p class="mt-1 font-mono text-xs text-[#ff0033]">
+												{$ffmpegBanner.error ?? 'Failed to load FFmpeg.'}
+											</p>
+										{/if}
+									</div>
+									{#if $ffmpegBanner.dismissible}
+										<button
+											onclick={() => downloadUiStore.dismissFfmpeg()}
+											class="p-1 text-[#006622] transition-all hover:text-[#00ff41]"
+											aria-label="Dismiss FFmpeg download"
+										>
+											<X size={16} />
+										</button>
 									{/if}
-								</p>
-								{#if $ffmpegBanner.phase === 'countdown'}
-									<p class="mt-1 text-xs text-[#00b82e] font-mono">
-										Starting in {$ffmpegBanner.countdownSeconds} seconds…
-									</p>
-								{:else if $ffmpegBanner.phase === 'loading'}
-									<p class="mt-1 text-xs text-[#00b82e] font-mono">
-										Preparing encoder… {formatPercent($ffmpegBanner.progress)}
-									</p>
-								{:else if $ffmpegBanner.phase === 'ready'}
-									<p class="mt-1 text-xs text-[#00b82e] font-mono">[ READY ]</p>
-								{:else if $ffmpegBanner.phase === 'error'}
-									<p class="mt-1 text-xs text-[#ff0033] font-mono">
-										{$ffmpegBanner.error ?? 'Failed to load FFmpeg.'}
-									</p>
+								</div>
+								{#if $ffmpegBanner.phase === 'loading'}
+									<div class="mt-3 h-1.5 overflow-hidden bg-[#003311]">
+										<div
+											class="h-full bg-[#00ff41] shadow-[0_0_10px_rgba(0,255,65,0.5)] transition-all duration-200"
+											style="width: {Math.min(Math.max($ffmpegBanner.progress * 100, 6), 100)}%"
+										></div>
+									</div>
 								{/if}
-							</div>
-							{#if $ffmpegBanner.dismissible}
-								<button
-									onclick={() => downloadUiStore.dismissFfmpeg()}
-									class="p-1 text-[#006622] transition-all hover:text-[#00ff41]"
-									aria-label="Dismiss FFmpeg download"
-								>
-									<X size={16} />
-								</button>
-							{/if}
-						</div>
-						{#if $ffmpegBanner.phase === 'loading'}
-							<div class="mt-3 h-1.5 overflow-hidden bg-[#003311]">
-								<div
-									class="h-full bg-[#00ff41] transition-all duration-200 shadow-[0_0_10px_rgba(0,255,65,0.5)]"
-									style="width: {Math.min(Math.max($ffmpegBanner.progress * 100, 6), 100)}%"
-								></div>
 							</div>
 						{/if}
-					</div>
-				{/if}
 
-				{#each $activeTrackDownloads as task (task.id)}
-					<div class="pointer-events-auto border border-[#00ff41] bg-black/95 px-4 py-3 text-sm shadow-[0_0_20px_rgba(0,255,65,0.3)] backdrop-blur">
-						<div class="flex items-start gap-3">
-							<div class="flex min-w-0 flex-1 flex-col gap-1">
-								<p class="flex items-center gap-2 text-sm font-semibold text-[#00ff41] font-mono">
-									{#if task.progress < 0.02}
-										<LoaderCircle size={16} class="animate-spin text-[#00ff41]" />
-									{:else}
-										<Download size={16} class="text-[#00ff41]" />
-									{/if}
-									<span class="truncate">{task.title}</span>
-								</p>
-								{#if task.subtitle}
-									<p class="truncate text-xs text-[#006622] font-mono">{task.subtitle}</p>
-								{/if}
-								<div class="flex flex-wrap items-center gap-2 text-xs text-[#006622] font-mono">
-									<span>{formatTransferStatus(task.receivedBytes, task.totalBytes)}</span>
-									<span aria-hidden="true">•</span>
-									<span>{formatPercent(task.progress)}</span>
+						{#each $activeTrackDownloads as task (task.id)}
+							<div
+								class="pointer-events-auto border border-[#00ff41] bg-black/95 px-4 py-3 text-sm shadow-[0_0_20px_rgba(0,255,65,0.3)] backdrop-blur"
+							>
+								<div class="flex items-start gap-3">
+									<div class="flex min-w-0 flex-1 flex-col gap-1">
+										<p
+											class="flex items-center gap-2 font-mono text-sm font-semibold text-[#00ff41]"
+										>
+											{#if task.progress < 0.02}
+												<LoaderCircle size={16} class="animate-spin text-[#00ff41]" />
+											{:else}
+												<Download size={16} class="text-[#00ff41]" />
+											{/if}
+											<span class="truncate">{task.title}</span>
+										</p>
+										{#if task.subtitle}
+											<p class="truncate font-mono text-xs text-[#006622]">{task.subtitle}</p>
+										{/if}
+										<div class="flex flex-wrap items-center gap-2 font-mono text-xs text-[#006622]">
+											<span>{formatTransferStatus(task.receivedBytes, task.totalBytes)}</span>
+											<span aria-hidden="true">•</span>
+											<span>{formatPercent(task.progress)}</span>
+										</div>
+									</div>
+									<button
+										onclick={() =>
+											task.cancellable
+												? downloadUiStore.cancelTrackDownload(task.id)
+												: downloadUiStore.dismissTrackTask(task.id)}
+										class="p-1 text-[#006622] transition-all hover:text-[#00ff41]"
+										aria-label={task.cancellable
+											? `Cancel download for ${task.title}`
+											: `Dismiss download for ${task.title}`}
+									>
+										<X size={16} />
+									</button>
+								</div>
+								<div class="mt-3 h-1.5 overflow-hidden bg-[#003311]">
+									<div
+										class="h-full bg-[#00ff41] shadow-[0_0_10px_rgba(0,255,65,0.5)] transition-all duration-200"
+										style="width: {Math.min(Math.max(task.progress * 100, 4), 100)}%"
+									></div>
 								</div>
 							</div>
-							<button
-								onclick={() =>
-									task.cancellable
-										? downloadUiStore.cancelTrackDownload(task.id)
-										: downloadUiStore.dismissTrackTask(task.id)
-								}
-								class="p-1 text-[#006622] transition-all hover:text-[#00ff41]"
-								aria-label={task.cancellable
-									? `Cancel download for ${task.title}`
-									: `Dismiss download for ${task.title}`}
-							>
-								<X size={16} />
-							</button>
-						</div>
-						<div class="mt-3 h-1.5 overflow-hidden bg-[#003311]">
-							<div
-								class="h-full bg-[#00ff41] transition-all duration-200 shadow-[0_0_10px_rgba(0,255,65,0.5)]"
-								style="width: {Math.min(Math.max(task.progress * 100, 4), 100)}%"
-							></div>
-						</div>
+						{/each}
 					</div>
-				{/each}
-			</div>
-		</div>
-		{/if}
-		<div class="overflow-hidden border border-[#00ff41] bg-black shadow-[0_0_30px_rgba(0,255,65,0.3)] transition-all duration-300 {$playerStore.isMinimized ? 'h-12' : ''}">
-			<div class="relative px-3 py-2">
-			{#if $playerStore.currentTrack}
-				{#if $playerStore.isMinimized}
-					<!-- Mini Player -->
-					<div class="flex items-center justify-between gap-3">
-						<div class="flex min-w-0 items-center gap-2 flex-1">
-							{#if $playerStore.currentTrack.album.cover}
-								<img
-									src={losslessAPI.getCoverUrl($playerStore.currentTrack.album.cover, '80')}
-									alt={$playerStore.currentTrack.title}
-									class="h-8 w-8 object-cover border border-[#00ff41] shadow-[0_0_10px_rgba(0,255,65,0.3)]"
-								/>
-							{/if}
-							<div class="min-w-0 flex-1">
-								<h3 class="truncate font-mono text-xs font-semibold text-[#00ff41]">
-									{$playerStore.currentTrack.title}
-								</h3>
-								<p class="truncate text-[10px] text-[#00b82e] font-mono">
-									{$playerStore.currentTrack.artist.name}
-								</p>
-							</div>
-						</div>
-
-						<div class="flex items-center gap-1.5">
-							<button
-								onclick={() => playerStore.togglePlay()}
-								class="rounded-full border border-[#00ff41] bg-[#00ff41] p-1.5 text-black transition-all hover:shadow-[0_0_20px_rgba(0,255,65,0.6)]"
-								aria-label={$playerStore.isPlaying ? 'Pause' : 'Play'}
-							>
-								{#if $playerStore.isPlaying}
-									<Pause size={16} fill="currentColor" />
-								{:else}
-									<Play size={16} fill="currentColor" />
-								{/if}
-							</button>
-
-							<button
-								onclick={() => playerStore.toggleMinimize()}
-								class="flex items-center gap-1.5 rounded-full border border-gray-700/70 bg-gray-900/60 px-2 py-1 text-xs text-gray-300 transition-colors hover:border-blue-500 hover:text-white"
-								aria-label="Maximize player"
-								type="button"
-							>
-								<Maximize2 size={14} />
-								<span class="hidden sm:inline">Maximize</span>
-							</button>
-						</div>
-					</div>
-				{:else}
-					<!-- Full Player -->
-					<!-- Progress Bar -->
-					<div class="mb-2">
-						<button
-							onclick={handleSeek}
-							class="group relative h-0.5 w-full cursor-pointer overflow-hidden bg-[#003311]"
-							type="button"
-							aria-label="Seek position"
-						>
-							<div
-								class="pointer-events-none absolute inset-y-0 left-0 bg-[#00b82e]/20 transition-all"
-								style="width: {bufferedPercent}%"
-								aria-hidden="true"
-							></div>
-							<div
-								class="pointer-events-none absolute inset-y-0 left-0 bg-[#00ff41] transition-all shadow-[0_0_5px_rgba(0,255,65,0.5)]"
-								style="width: {getPercent($playerStore.currentTime, $playerStore.duration)}%"
-								aria-hidden="true"
-							></div>
-							<div
-								class="pointer-events-none absolute top-1/2 h-1.5 w-1.5 -translate-y-1/2 bg-[#00ff41] opacity-0 transition-opacity group-hover:opacity-100 shadow-[0_0_10px_rgba(0,255,65,0.8)]"
-								style="left: {getPercent($playerStore.currentTime, $playerStore.duration)}%"
-								aria-hidden="true"
-							></div>
-						</button>
-						<div class="mt-0.5 flex justify-between text-[9px] text-[#006622] font-mono">
-							<span>{formatTime($playerStore.currentTime)}</span>
-							<span>{formatTime($playerStore.duration)}</span>
-						</div>
-					</div>
-
-					<div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-						<!-- Track Info -->
-						<div class="flex min-w-0 items-center gap-2 sm:flex-1">
-							{#if $playerStore.currentTrack.album.cover}
-								<img
-									src={losslessAPI.getCoverUrl($playerStore.currentTrack.album.cover, '640')}
-									alt={$playerStore.currentTrack.title}
-									class="h-10 w-10 object-cover border border-[#00ff41] shadow-[0_0_10px_rgba(0,255,65,0.3)]"
-								/>
-							{/if}
-							<div class="min-w-0 flex-1">
-								<h3 class="truncate font-mono text-xs font-semibold text-[#00ff41]">
-									{$playerStore.currentTrack.title}
-								</h3>
-								<p class="truncate text-[10px] text-[#00b82e] font-mono">
-									{$playerStore.currentTrack.artist.name}
-								</p>
-								<p class="text-[9px] text-[#006622] font-mono">
-									{formatQualityLabel($playerStore.currentTrack.audioQuality)}
-								</p>
-							</div>
-						</div>
-
-						<div class="flex flex-wrap items-center justify-between gap-2 sm:flex-nowrap sm:justify-end sm:gap-3">
-							<!-- Controls -->
-							<div class="flex w-full flex-1 items-center justify-center gap-1.5 sm:w-auto sm:flex-none sm:justify-center">
-								<button
-									onclick={() => playerStore.previous()}
-									class="p-1.5 text-[#006622] transition-all hover:text-[#00ff41] disabled:opacity-30"
-									disabled={$playerStore.queueIndex <= 0}
-									aria-label="Previous track"
-								>
-									<SkipBack size={16} />
-								</button>
-
-								<button
-									onclick={() => playerStore.togglePlay()}
-									class="rounded-full border border-[#00ff41] bg-[#00ff41] p-2 text-black transition-all hover:shadow-[0_0_20px_rgba(0,255,65,0.6)]"
-									aria-label={$playerStore.isPlaying ? 'Pause' : 'Play'}
-								>
-									{#if $playerStore.isPlaying}
-										<Pause size={18} fill="currentColor" />
-									{:else}
-										<Play size={18} fill="currentColor" />
-									{/if}
-								</button>
-
-								<button
-									onclick={() => playerStore.next()}
-									class="p-1.5 text-[#006622] transition-all hover:text-[#00ff41] disabled:opacity-30"
-									disabled={$playerStore.queueIndex >= $playerStore.queue.length - 1}
-									aria-label="Next track"
-								>
-									<SkipForward size={16} />
-								</button>
-							</div>
-
-							<!-- Queue Toggle -->
-							<div class="flex items-center gap-1.5 sm:flex-none">
-								<button
-									onclick={() => playerStore.toggleMinimize()}
-									class="flex items-center gap-1.5 rounded-full border border-gray-700/70 bg-gray-900/60 px-2 py-1 text-xs text-gray-300 transition-colors hover:border-blue-500 hover:text-white"
-									aria-label="Minimize player"
-									type="button"
-								>
-									<Minimize2 size={14} />
-									<span class="hidden sm:inline">Minimize</span>
-								</button>
-								<button
-									onclick={toggleQueuePanel}
-									class="flex items-center gap-1.5 rounded-full border border-gray-700/70 bg-gray-900/60 px-2 py-1 text-xs text-gray-300 transition-colors hover:border-blue-500 hover:text-white {showQueuePanel
-										? 'border-blue-500 text-white'
-										: ''}"
-									aria-label="Toggle queue panel"
-									aria-expanded={showQueuePanel}
-									type="button"
-								>
-									<ListMusic size={14} />
-									<span class="hidden sm:inline">Queue ({$playerStore.queue.length})</span>
-								</button>
-							</div>
-
-							<!-- Volume Control -->
-							<div class="flex items-center gap-1.5 sm:flex-none">
-								<button
-									onclick={toggleMute}
-									class="p-1.5 text-gray-400 transition-colors hover:text-white"
-									aria-label={isMuted ? 'Unmute' : 'Mute'}
-								>
-									{#if isMuted || $playerStore.volume === 0}
-										<VolumeX size={16} />
-									{:else}
-										<Volume2 size={16} />
-									{/if}
-								</button>
-								<input
-									type="range"
-									min="0"
-									max="1"
-									step="0.01"
-									value={$playerStore.volume}
-									oninput={handleVolumeChange}
-									class="hidden h-0.5 w-20 cursor-pointer appearance-none rounded-lg bg-gray-700 accent-white sm:block"
-									aria-label="Volume"
-								/>
-							</div>
-						</div>
-					</div>
-				{/if}
-
-			{:else}
-				<div class="flex h-20 items-center justify-center text-sm text-gray-400">
-					Nothing is playing
 				</div>
 			{/if}
+			<div
+				class="overflow-hidden border border-[#00ff41] bg-black shadow-[0_0_30px_rgba(0,255,65,0.3)] transition-all duration-300 {$playerStore.isMinimized
+					? 'h-12'
+					: ''}"
+			>
+				<div class="relative px-3 py-2">
+					{#if $playerStore.currentTrack}
+						{#if $playerStore.isMinimized}
+							<!-- Mini Player -->
+							<div class="flex items-center justify-between gap-3">
+								<div class="flex min-w-0 flex-1 items-center gap-2">
+									{#if $playerStore.currentTrack.album.cover}
+										<img
+											src={losslessAPI.getCoverUrl($playerStore.currentTrack.album.cover, '80')}
+											alt={$playerStore.currentTrack.title}
+											class="h-8 w-8 border border-[#00ff41] object-cover shadow-[0_0_10px_rgba(0,255,65,0.3)]"
+										/>
+									{/if}
+									<div class="min-w-0 flex-1">
+										<h3 class="truncate font-mono text-xs font-semibold text-[#00ff41]">
+											{$playerStore.currentTrack.title}
+										</h3>
+										<p class="truncate font-mono text-[10px] text-[#00b82e]">
+											{$playerStore.currentTrack.artist.name}
+										</p>
+									</div>
+								</div>
 
-			{#if $playerStore.currentTrack && showQueuePanel && !$playerStore.isMinimized}
-					<div
-						class="mt-4 space-y-3 rounded-2xl border border-gray-800/80 bg-neutral-900/90 p-4 text-sm shadow-inner"
-						transition:slide={{ duration: 220, easing: cubicOut }}
-					>
-						<div class="flex items-center justify-between gap-2">
-							<div class="flex items-center gap-2 text-gray-300">
-								<ListMusic size={18} />
-								<span class="font-medium">Playback Queue</span>
-								<span class="rounded-full bg-gray-800 px-2 py-0.5 text-xs text-gray-400">
-									{$playerStore.queue.length}
-								</span>
-							</div>
-							<div class="flex items-center gap-2">
-								<button
-									onclick={handleShuffleQueue}
-									class="flex items-center gap-1 rounded-full border border-transparent px-3 py-1 text-xs tracking-wide text-gray-400 uppercase transition-colors hover:border-blue-500 hover:text-blue-200 disabled:opacity-40"
-									type="button"
-									disabled={$playerStore.queue.length <= 1}
-								>
-									<Shuffle size={14} />
-									Shuffle
-								</button>
-								<button
-									onclick={clearQueue}
-									class="flex items-center gap-1 rounded-full border border-transparent px-3 py-1 text-xs tracking-wide text-gray-400 uppercase transition-colors hover:border-red-500 hover:text-red-400"
-									type="button"
-									disabled={$playerStore.queue.length === 0}
-								>
-									<Trash2 size={14} />
-									Clear
-								</button>
-								<button
-									onclick={closeQueuePanel}
-									class="rounded-full p-1 text-gray-400 transition-colors hover:text-white"
-									aria-label="Close queue panel"
-								>
-									<X size={16} />
-								</button>
-							</div>
-						</div>
+								<div class="flex items-center gap-1.5">
+									<button
+										onclick={() => playerStore.togglePlay()}
+										class="rounded-full border border-[#00ff41] bg-[#00ff41] p-1.5 text-black transition-all hover:shadow-[0_0_20px_rgba(0,255,65,0.6)]"
+										aria-label={$playerStore.isPlaying ? 'Pause' : 'Play'}
+									>
+										{#if $playerStore.isPlaying}
+											<Pause size={16} fill="currentColor" />
+										{:else}
+											<Play size={16} fill="currentColor" />
+										{/if}
+									</button>
 
-						{#if $playerStore.queue.length > 0}
-							<ul class="max-h-60 space-y-2 overflow-y-auto pr-1">
-								{#each $playerStore.queue as queuedTrack, index}
-									<li>
-										<div
-											onclick={() => playFromQueue(index)}
-											onkeydown={(event) => {
-												if (event.key === 'Enter' || event.key === ' ') {
-													event.preventDefault();
-													playFromQueue(index);
-												}
-											}}
-											tabindex="0"
-											role="button"
-											class="group flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2 text-left transition-colors {index ===
-											$playerStore.queueIndex
-												? 'bg-blue-500/10 text-white'
-												: 'text-gray-200 hover:bg-gray-800/70'}"
-										>
-											<span
-												class="w-6 text-xs font-semibold text-gray-500 group-hover:text-gray-300"
-											>
-												{index + 1}
-											</span>
-											<div class="min-w-0 flex-1">
-												<p class="truncate text-sm font-medium">
-													{queuedTrack.title}
-												</p>
-												<p class="truncate text-xs text-gray-400 group-hover:text-gray-300">
-													{queuedTrack.artist.name}
-												</p>
-											</div>
-											<button
-												onclick={(event) => removeFromQueue(index, event)}
-												class="rounded-full p-1 text-gray-500 transition-colors hover:text-red-400"
-												aria-label={`Remove ${queuedTrack.title} from queue`}
-												type="button"
-											>
-												<X size={14} />
-											</button>
-										</div>
-									</li>
-								{/each}
-							</ul>
+									<button
+										onclick={() => playerStore.toggleMinimize()}
+										class="flex items-center gap-1.5 rounded-full border border-gray-700/70 bg-gray-900/60 px-2 py-1 text-xs text-gray-300 transition-colors hover:border-blue-500 hover:text-white"
+										aria-label="Maximize player"
+										type="button"
+									>
+										<Maximize2 size={14} />
+										<span class="hidden sm:inline">Maximize</span>
+									</button>
+								</div>
+							</div>
 						{:else}
-							<p
-								class="rounded-lg border border-dashed border-gray-700 bg-gray-900/70 px-3 py-8 text-center text-gray-400"
-							>
-								Queue is empty
-							</p>
-						{/if}
-					</div>
-				{/if}
+							<!-- Full Player -->
+							<!-- Progress Bar -->
+							<div class="mb-2">
+								<button
+									onclick={handleSeek}
+									class="group relative h-0.5 w-full cursor-pointer overflow-hidden bg-[#003311]"
+									type="button"
+									aria-label="Seek position"
+								>
+									<div
+										class="pointer-events-none absolute inset-y-0 left-0 bg-[#00b82e]/20 transition-all"
+										style="width: {bufferedPercent}%"
+										aria-hidden="true"
+									></div>
+									<div
+										class="pointer-events-none absolute inset-y-0 left-0 bg-[#00ff41] shadow-[0_0_5px_rgba(0,255,65,0.5)] transition-all"
+										style="width: {getPercent($playerStore.currentTime, $playerStore.duration)}%"
+										aria-hidden="true"
+									></div>
+									<div
+										class="pointer-events-none absolute top-1/2 h-1.5 w-1.5 -translate-y-1/2 bg-[#00ff41] opacity-0 shadow-[0_0_10px_rgba(0,255,65,0.8)] transition-opacity group-hover:opacity-100"
+										style="left: {getPercent($playerStore.currentTime, $playerStore.duration)}%"
+										aria-hidden="true"
+									></div>
+								</button>
+								<div class="mt-0.5 flex justify-between font-mono text-[9px] text-[#006622]">
+									<span>{formatTime($playerStore.currentTime)}</span>
+									<span>{formatTime($playerStore.duration)}</span>
+								</div>
+							</div>
 
-				{#if $playerStore.currentTrack && $playerStore.isLoading && !$playerStore.isMinimized}
-					<div class="loading-overlay">
-						<div class="loading-equalizer" aria-hidden="true">
-							<span class="bar" style="animation-delay: 0ms"></span>
-							<span class="bar" style="animation-delay: 150ms"></span>
-							<span class="bar" style="animation-delay: 300ms"></span>
-							<span class="bar" style="animation-delay: 450ms"></span>
+							<div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+								<!-- Track Info -->
+								<div class="flex min-w-0 items-center gap-2 sm:flex-1">
+									{#if $playerStore.currentTrack.album.cover}
+										<img
+											src={losslessAPI.getCoverUrl($playerStore.currentTrack.album.cover, '640')}
+											alt={$playerStore.currentTrack.title}
+											class="h-10 w-10 border border-[#00ff41] object-cover shadow-[0_0_10px_rgba(0,255,65,0.3)]"
+										/>
+									{/if}
+									<div class="min-w-0 flex-1">
+										<h3 class="truncate font-mono text-xs font-semibold text-[#00ff41]">
+											{$playerStore.currentTrack.title}
+										</h3>
+										<p class="truncate font-mono text-[10px] text-[#00b82e]">
+											{$playerStore.currentTrack.artist.name}
+										</p>
+										<p class="font-mono text-[9px] text-[#006622]">
+											{formatQualityLabel($playerStore.currentTrack.audioQuality)}
+										</p>
+									</div>
+								</div>
+
+								<div
+									class="flex flex-wrap items-center justify-between gap-2 sm:flex-nowrap sm:justify-end sm:gap-3"
+								>
+									<!-- Controls -->
+									<div
+										class="flex w-full flex-1 items-center justify-center gap-1.5 sm:w-auto sm:flex-none sm:justify-center"
+									>
+										<button
+											onclick={() => playerStore.previous()}
+											class="p-1.5 text-[#006622] transition-all hover:text-[#00ff41] disabled:opacity-30"
+											disabled={$playerStore.queueIndex <= 0}
+											aria-label="Previous track"
+										>
+											<SkipBack size={16} />
+										</button>
+
+										<button
+											onclick={() => playerStore.togglePlay()}
+											class="rounded-full border border-[#00ff41] bg-[#00ff41] p-2 text-black transition-all hover:shadow-[0_0_20px_rgba(0,255,65,0.6)]"
+											aria-label={$playerStore.isPlaying ? 'Pause' : 'Play'}
+										>
+											{#if $playerStore.isPlaying}
+												<Pause size={18} fill="currentColor" />
+											{:else}
+												<Play size={18} fill="currentColor" />
+											{/if}
+										</button>
+
+										<button
+											onclick={() => playerStore.next()}
+											class="p-1.5 text-[#006622] transition-all hover:text-[#00ff41] disabled:opacity-30"
+											disabled={$playerStore.queueIndex >= $playerStore.queue.length - 1}
+											aria-label="Next track"
+										>
+											<SkipForward size={16} />
+										</button>
+									</div>
+
+									<!-- Queue Toggle -->
+									<div class="flex items-center gap-1.5 sm:flex-none">
+										<button
+											onclick={() => playerStore.toggleMinimize()}
+											class="flex items-center gap-1.5 rounded-full border border-gray-700/70 bg-gray-900/60 px-2 py-1 text-xs text-gray-300 transition-colors hover:border-blue-500 hover:text-white"
+											aria-label="Minimize player"
+											type="button"
+										>
+											<Minimize2 size={14} />
+											<span class="hidden sm:inline">Minimize</span>
+										</button>
+										<button
+											onclick={toggleQueuePanel}
+											class="flex items-center gap-1.5 rounded-full border border-gray-700/70 bg-gray-900/60 px-2 py-1 text-xs text-gray-300 transition-colors hover:border-blue-500 hover:text-white {showQueuePanel
+												? 'border-blue-500 text-white'
+												: ''}"
+											aria-label="Toggle queue panel"
+											aria-expanded={showQueuePanel}
+											type="button"
+										>
+											<ListMusic size={14} />
+											<span class="hidden sm:inline">Queue ({$playerStore.queue.length})</span>
+										</button>
+									</div>
+
+									<!-- Volume Control -->
+									<div class="flex items-center gap-1.5 sm:flex-none">
+										<button
+											onclick={toggleMute}
+											class="p-1.5 text-gray-400 transition-colors hover:text-white"
+											aria-label={isMuted ? 'Unmute' : 'Mute'}
+										>
+											{#if isMuted || $playerStore.volume === 0}
+												<VolumeX size={16} />
+											{:else}
+												<Volume2 size={16} />
+											{/if}
+										</button>
+										<input
+											type="range"
+											min="0"
+											max="1"
+											step="0.01"
+											value={$playerStore.volume}
+											oninput={handleVolumeChange}
+											class="hidden h-0.5 w-20 cursor-pointer appearance-none rounded-lg bg-gray-700 accent-white sm:block"
+											aria-label="Volume"
+										/>
+									</div>
+								</div>
+							</div>
+						{/if}
+					{:else}
+						<div class="flex h-20 items-center justify-center text-sm text-gray-400">
+							Nothing is playing
 						</div>
-						<p class="text-sm font-medium text-gray-200">Loading track…</p>
-					</div>
-				{/if}
+					{/if}
+
+					{#if $playerStore.currentTrack && showQueuePanel && !$playerStore.isMinimized}
+						<div
+							class="mt-4 space-y-3 rounded-2xl border border-gray-800/80 bg-neutral-900/90 p-4 text-sm shadow-inner"
+							transition:slide={{ duration: 220, easing: cubicOut }}
+						>
+							<div class="flex items-center justify-between gap-2">
+								<div class="flex items-center gap-2 text-gray-300">
+									<ListMusic size={18} />
+									<span class="font-medium">Playback Queue</span>
+									<span class="rounded-full bg-gray-800 px-2 py-0.5 text-xs text-gray-400">
+										{$playerStore.queue.length}
+									</span>
+								</div>
+								<div class="flex items-center gap-2">
+									<button
+										onclick={handleShuffleQueue}
+										class="flex items-center gap-1 rounded-full border border-transparent px-3 py-1 text-xs tracking-wide text-gray-400 uppercase transition-colors hover:border-blue-500 hover:text-blue-200 disabled:opacity-40"
+										type="button"
+										disabled={$playerStore.queue.length <= 1}
+									>
+										<Shuffle size={14} />
+										Shuffle
+									</button>
+									<button
+										onclick={clearQueue}
+										class="flex items-center gap-1 rounded-full border border-transparent px-3 py-1 text-xs tracking-wide text-gray-400 uppercase transition-colors hover:border-red-500 hover:text-red-400"
+										type="button"
+										disabled={$playerStore.queue.length === 0}
+									>
+										<Trash2 size={14} />
+										Clear
+									</button>
+									<button
+										onclick={closeQueuePanel}
+										class="rounded-full p-1 text-gray-400 transition-colors hover:text-white"
+										aria-label="Close queue panel"
+									>
+										<X size={16} />
+									</button>
+								</div>
+							</div>
+
+							{#if $playerStore.queue.length > 0}
+								<ul class="max-h-60 space-y-2 overflow-y-auto pr-1">
+									{#each $playerStore.queue as queuedTrack, index}
+										<li>
+											<div
+												onclick={() => playFromQueue(index)}
+												onkeydown={(event) => {
+													if (event.key === 'Enter' || event.key === ' ') {
+														event.preventDefault();
+														playFromQueue(index);
+													}
+												}}
+												tabindex="0"
+												role="button"
+												class="group flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2 text-left transition-colors {index ===
+												$playerStore.queueIndex
+													? 'bg-blue-500/10 text-white'
+													: 'text-gray-200 hover:bg-gray-800/70'}"
+											>
+												<span
+													class="w-6 text-xs font-semibold text-gray-500 group-hover:text-gray-300"
+												>
+													{index + 1}
+												</span>
+												<div class="min-w-0 flex-1">
+													<p class="truncate text-sm font-medium">
+														{queuedTrack.title}
+													</p>
+													<p class="truncate text-xs text-gray-400 group-hover:text-gray-300">
+														{queuedTrack.artist.name}
+													</p>
+												</div>
+												<button
+													onclick={(event) => removeFromQueue(index, event)}
+													class="rounded-full p-1 text-gray-500 transition-colors hover:text-red-400"
+													aria-label={`Remove ${queuedTrack.title} from queue`}
+													type="button"
+												>
+													<X size={14} />
+												</button>
+											</div>
+										</li>
+									{/each}
+								</ul>
+							{:else}
+								<p
+									class="rounded-lg border border-dashed border-gray-700 bg-gray-900/70 px-3 py-8 text-center text-gray-400"
+								>
+									Queue is empty
+								</p>
+							{/if}
+						</div>
+					{/if}
+
+					{#if $playerStore.currentTrack && $playerStore.isLoading && !$playerStore.isMinimized}
+						<div class="loading-overlay">
+							<div class="loading-equalizer" aria-hidden="true">
+								<span class="bar" style="animation-delay: 0ms"></span>
+								<span class="bar" style="animation-delay: 150ms"></span>
+								<span class="bar" style="animation-delay: 300ms"></span>
+								<span class="bar" style="animation-delay: 450ms"></span>
+							</div>
+							<p class="text-sm font-medium text-gray-200">Loading track…</p>
+						</div>
+					{/if}
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
 {/if}
 
 <style>
@@ -1070,11 +1086,6 @@
 	.audio-player-backdrop {
 		transform: translateY(0);
 		opacity: 1;
-	}
-
-	.audio-player-backdrop.hidden {
-		transform: translateY(100%);
-		opacity: 0;
 	}
 
 	input[type='range']::-webkit-slider-thumb {
