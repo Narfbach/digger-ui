@@ -34,7 +34,7 @@
 	let bufferedPercent = $state(0);
 	const { onHeightChange = () => {} } = $props<{ onHeightChange?: (height: number) => void }>();
 
-	let containerElement: HTMLDivElement | null = null;
+	let containerElement: HTMLDivElement | null = $state(null);
 	let resizeObserver: ResizeObserver | null = null;
 	let showQueuePanel = $state(false);
 	const streamCache = new Map<string, string>();

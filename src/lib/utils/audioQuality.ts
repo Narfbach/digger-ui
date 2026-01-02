@@ -2,6 +2,7 @@ import type { AudioQuality, Track } from '$lib/types';
 
 const QUALITY_PRIORITY: readonly AudioQuality[] = [
 	'HI_RES_LOSSLESS',
+	'HI_RES',
 	'LOSSLESS',
 	'HIGH',
 	'LOW'
@@ -13,7 +14,9 @@ const QUALITY_TOKENS: Record<AudioQuality, readonly string[]> = {
 		'HIRES_LOSSLESS',
 		'HIRESLOSSLESS',
 		'HIFI_PLUS',
-		'HI_RES_FLAC',
+		'HI_RES_FLAC'
+	],
+	HI_RES: [
 		'HI_RES',
 		'HIRES',
 		'MASTER',
