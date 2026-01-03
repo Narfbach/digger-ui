@@ -1,17 +1,11 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
-	import {
-		discoverStore,
-		discoverTracks,
-		discoverAlbums,
-		discoverLoading,
-		discoverError
-	} from '$lib/stores/discover';
+	import { discoverStore } from '$lib/stores/discover';
 	import { playerStore } from '$lib/stores/player';
 	import { losslessAPI } from '$lib/api';
 	import type { Track, Album } from '$lib/types';
-	import { Play, RefreshCw, Disc, Music, ChevronRight, LoaderCircle } from 'lucide-svelte';
+	import { Play, RefreshCw, Disc, Music, ChevronRight } from 'lucide-svelte';
 
 	const trackSkeletons = Array.from({ length: 8 }, (_, i) => i);
 	const albumSkeletons = Array.from({ length: 6 }, (_, i) => i);
@@ -26,8 +20,8 @@
 	}
 
 	function handlePlayAll() {
-		if ($discoverTracks.length > 0) {
-			playerStore.setQueue($discoverTracks, 0);
+		if ($discoverStore.topTracks.length > 0) {
+			playerStore.setQueue($discoverStore.topTracks, 0);
 			playerStore.play();
 		}
 	}
@@ -58,17 +52,17 @@
 		</div>
 		<button
 			onclick={handleRefresh}
-			disabled={$discoverLoading}
+			disabled={$discoverStore.isLoading}
 			class="flex items-center gap-2 border border-[#003311] bg-black px-3 py-1.5 font-mono text-xs text-[#00b82e] transition-all hover:border-[#00ff41] hover:text-[#00ff41] disabled:opacity-50"
 		>
-			<RefreshCw size={14} class={$discoverLoading ? 'animate-spin' : ''} />
+			<RefreshCw size={14} class={$discoverStore.isLoading ? 'animate-spin' : ''} />
 			REFRESH
 		</button>
 	</div>
 
-	{#if $discoverError}
+	{#if $discoverStore.error}
 		<div class="border border-[#ff0033] bg-[#110000] p-4">
-			<p class="font-mono text-sm text-[#ff0033]">{$discoverError}</p>
+			<p class="font-mono text-sm text-[#ff0033]">{$discoverStore.error}</p>
 			<button onclick={handleRefresh} class="mt-2 font-mono text-xs text-[#00ff41] hover:underline">
 				[ RETRY ]
 			</button>
@@ -79,7 +73,7 @@
 	<div class="space-y-4">
 		<div class="flex items-center justify-between">
 			<h3 class="font-mono text-sm tracking-wide text-[#00b82e] uppercase">// TRENDING TRACKS</h3>
-			{#if $discoverTracks.length > 0}
+			{#if $discoverStore.topTracks.length > 0}
 				<button
 					onclick={handlePlayAll}
 					class="flex items-center gap-2 font-mono text-xs text-[#006622] transition-all hover:text-[#00ff41]"
@@ -91,7 +85,7 @@
 		</div>
 
 		<div class="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">
-			{#if $discoverLoading && $discoverTracks.length === 0}
+			{#if $discoverStore.isLoading && $discoverStore.topTracks.length === 0}
 				{#each trackSkeletons as _}
 					<div
 						class="flex animate-pulse items-center gap-3 border border-[#003311] bg-[#001100]/50 p-3"
@@ -104,7 +98,7 @@
 					</div>
 				{/each}
 			{:else}
-				{#each $discoverTracks as track (track.id)}
+				{#each $discoverStore.topTracks as track (track.id)}
 					<button
 						onclick={() => handleTrackPlay(track)}
 						class="group flex items-center gap-3 border border-[#003311] bg-[#001100]/30 p-3 text-left transition-all hover:border-[#00ff41] hover:bg-[#001100] hover:shadow-[0_0_15px_rgba(0,255,65,0.2)]"
@@ -152,12 +146,12 @@
 	</div>
 
 	<!-- Recent Albums Section -->
-	{#if $discoverAlbums.length > 0 || $discoverLoading}
+	{#if $discoverStore.recentAlbums.length > 0 || $discoverStore.isLoading}
 		<div class="space-y-4">
 			<h3 class="font-mono text-sm tracking-wide text-[#00b82e] uppercase">// NEW RELEASES</h3>
 
 			<div class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-				{#if $discoverLoading && $discoverAlbums.length === 0}
+				{#if $discoverStore.isLoading && $discoverStore.recentAlbums.length === 0}
 					{#each albumSkeletons as _}
 						<div class="animate-pulse space-y-2">
 							<div class="aspect-square bg-[#003311]"></div>
@@ -166,7 +160,7 @@
 						</div>
 					{/each}
 				{:else}
-					{#each $discoverAlbums as album (album.id)}
+					{#each $discoverStore.recentAlbums as album (album.id)}
 						<button
 							onclick={() => handleAlbumClick(album)}
 							class="group space-y-2 text-left transition-all"
