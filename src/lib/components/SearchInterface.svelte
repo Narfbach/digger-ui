@@ -11,7 +11,6 @@
 		User,
 		Disc,
 		Download,
-		Newspaper,
 		ListPlus,
 		ListVideo,
 		LoaderCircle,
@@ -42,14 +41,6 @@
 	};
 
 	let albumDownloadStates = $state<Record<number, AlbumDownloadState>>({});
-
-	const newsItems = [
-		{
-			title: 'Welcome to Digger',
-			description:
-				'Stream and download lossless music. Search the database and start listening.'
-		}
-	];
 
 	const trackSkeletons = Array.from({ length: 6 }, (_, index) => index);
 	const gridSkeletons = Array.from({ length: 8 }, (_, index) => index);
@@ -343,13 +334,13 @@
 			bind:value={query}
 			onkeypress={handleKeyPress}
 			placeholder="> SEARCH DATABASE_"
-			class="w-full border border-[#003311] bg-black px-4 py-3 pl-12 text-[#00ff41] font-mono placeholder:text-[#006622] transition-all focus:border-[#00ff41] focus:shadow-[0_0_15px_rgba(0,255,65,0.3)] focus:outline-none uppercase tracking-wider text-sm"
+			class="w-full border border-[#003311] bg-black px-4 py-3 pl-12 font-mono text-sm tracking-wider text-[#00ff41] uppercase transition-all placeholder:text-[#006622] focus:border-[#00ff41] focus:shadow-[0_0_15px_rgba(0,255,65,0.3)] focus:outline-none"
 		/>
 		<Search class="absolute top-1/2 left-4 -translate-y-1/2 text-[#006622]" size={18} />
 		<button
 			onclick={handleSearch}
 			disabled={isLoading || !query.trim()}
-			class="absolute top-1/2 right-2 -translate-y-1/2 border border-[#00ff41] bg-[#001100] px-4 py-1.5 text-[#00ff41] text-xs font-mono transition-all hover:shadow-[0_0_10px_rgba(0,255,65,0.4)] disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:shadow-none uppercase tracking-wider"
+			class="absolute top-1/2 right-2 -translate-y-1/2 border border-[#00ff41] bg-[#001100] px-4 py-1.5 font-mono text-xs tracking-wider text-[#00ff41] uppercase transition-all hover:shadow-[0_0_10px_rgba(0,255,65,0.4)] disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:shadow-none"
 		>
 			{isLoading ? '[ SCANNING... ]' : '[ SEARCH ]'}
 		</button>
@@ -359,30 +350,30 @@
 	<div class="mb-8 flex gap-3 overflow-auto border-b border-[#003311]">
 		<button
 			onclick={() => handleTabChange('tracks')}
-			class="flex cursor-pointer items-center gap-2 border-b-2 px-4 py-2 transition-all font-mono text-xs uppercase tracking-widest {activeTab ===
+			class="flex cursor-pointer items-center gap-2 border-b-2 px-4 py-2 font-mono text-xs tracking-widest uppercase transition-all {activeTab ===
 			'tracks'
 				? 'border-[#00ff41] text-[#00ff41] shadow-[0_2px_10px_rgba(0,255,65,0.3)]'
-				: 'border-transparent text-[#006622] hover:text-[#00b82e] hover:border-[#006622]'}"
+				: 'border-transparent text-[#006622] hover:border-[#006622] hover:text-[#00b82e]'}"
 		>
 			<Music size={16} />
 			TRACKS
 		</button>
 		<button
 			onclick={() => handleTabChange('albums')}
-			class="flex cursor-pointer items-center gap-2 border-b-2 px-4 py-2 transition-all font-mono text-xs uppercase tracking-widest {activeTab ===
+			class="flex cursor-pointer items-center gap-2 border-b-2 px-4 py-2 font-mono text-xs tracking-widest uppercase transition-all {activeTab ===
 			'albums'
 				? 'border-[#00ff41] text-[#00ff41] shadow-[0_2px_10px_rgba(0,255,65,0.3)]'
-				: 'border-transparent text-[#006622] hover:text-[#00b82e] hover:border-[#006622]'}"
+				: 'border-transparent text-[#006622] hover:border-[#006622] hover:text-[#00b82e]'}"
 		>
 			<Disc size={16} />
 			ALBUMS
 		</button>
 		<button
 			onclick={() => handleTabChange('artists')}
-			class="flex cursor-pointer items-center gap-2 border-b-2 px-4 py-2 transition-all font-mono text-xs uppercase tracking-widest {activeTab ===
+			class="flex cursor-pointer items-center gap-2 border-b-2 px-4 py-2 font-mono text-xs tracking-widest uppercase transition-all {activeTab ===
 			'artists'
 				? 'border-[#00ff41] text-[#00ff41] shadow-[0_2px_10px_rgba(0,255,65,0.3)]'
-				: 'border-transparent text-[#006622] hover:text-[#00b82e] hover:border-[#006622]'}"
+				: 'border-transparent text-[#006622] hover:border-[#006622] hover:text-[#00b82e]'}"
 		>
 			<User size={16} />
 			ARTISTS
@@ -409,7 +400,9 @@
 			<div class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
 				{#each gridSkeletons as _}
 					<div class="space-y-3">
-						<div class="aspect-square w-full animate-pulse border border-[#003311] bg-[#001100]"></div>
+						<div
+							class="aspect-square w-full animate-pulse border border-[#003311] bg-[#001100]"
+						></div>
 						<div class="h-3 w-3/4 animate-pulse bg-[#003311]"></div>
 						<div class="h-2 w-1/2 animate-pulse bg-[#002211]"></div>
 					</div>
@@ -419,7 +412,9 @@
 			<div class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
 				{#each gridSkeletons as _}
 					<div class="flex flex-col items-center gap-3">
-						<div class="aspect-square w-full animate-pulse border border-[#003311] rounded-full bg-[#001100]"></div>
+						<div
+							class="aspect-square w-full animate-pulse rounded-full border border-[#003311] bg-[#001100]"
+						></div>
 						<div class="h-3 w-3/4 animate-pulse bg-[#003311]"></div>
 						<div class="h-2 w-1/2 animate-pulse bg-[#002211]"></div>
 					</div>
@@ -434,7 +429,7 @@
 
 	<!-- Error State -->
 	{#if error}
-		<div class="border border-[#ff0033] bg-[#110000] p-4 text-[#ff0033] font-mono text-sm">
+		<div class="border border-[#ff0033] bg-[#110000] p-4 font-mono text-sm text-[#ff0033]">
 			[ ERROR ] {error}
 		</div>
 	{/if}
@@ -455,11 +450,13 @@
 							<img
 								src={losslessAPI.getCoverUrl(track.album.cover, '160')}
 								alt={track.title}
-								class="h-12 w-12 object-cover border border-[#003311]"
+								class="h-12 w-12 border border-[#003311] object-cover"
 							/>
 						{/if}
 						<div class="min-w-0 flex-1">
-							<h3 class="truncate font-mono text-sm font-semibold text-[#00ff41] group-hover:matrix-glow transition-all">
+							<h3
+								class="group-hover:matrix-glow truncate font-mono text-sm font-semibold text-[#00ff41] transition-all"
+							>
 								{track.title}
 								{#if track.explicit}
 									<svg
@@ -477,8 +474,8 @@
 									>
 								{/if}
 							</h3>
-							<p class="truncate text-xs text-[#00b82e] font-mono">{track.artist.name}</p>
-							<p class="text-[10px] text-[#006622] font-mono">
+							<p class="truncate font-mono text-xs text-[#00b82e]">{track.artist.name}</p>
+							<p class="font-mono text-[10px] text-[#006622]">
 								{track.album.title} • {formatQualityLabel(track.audioQuality)}
 							</p>
 						</div>
@@ -503,11 +500,12 @@
 								onclick={(event) =>
 									downloadingIds.has(track.id)
 										? handleCancelDownload(track.id, event)
-										: handleDownload(track, event)
-								}
+										: handleDownload(track, event)}
 								class="p-2 text-[#006622] transition-all hover:text-[#00ff41]"
 								title={downloadingIds.has(track.id) ? 'Cancel download' : 'Download track'}
-								aria-label={downloadingIds.has(track.id) ? `Cancel download for ${track.title}` : `Download ${track.title}`}
+								aria-label={downloadingIds.has(track.id)
+									? `Cancel download for ${track.title}`
+									: `Download ${track.title}`}
 								aria-busy={downloadingIds.has(track.id)}
 								aria-pressed={downloadingIds.has(track.id)}
 							>
@@ -554,7 +552,9 @@
 							type="button"
 							class="flex w-full flex-col text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00ff41] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
 						>
-							<div class="relative mb-2 aspect-square overflow-hidden border border-[#003311] group-hover:border-[#00ff41] transition-all group-hover:shadow-[0_0_15px_rgba(0,255,65,0.2)]">
+							<div
+								class="relative mb-2 aspect-square overflow-hidden border border-[#003311] transition-all group-hover:border-[#00ff41] group-hover:shadow-[0_0_15px_rgba(0,255,65,0.2)]"
+							>
 								{#if album.cover}
 									<img
 										src={losslessAPI.getCoverUrl(album.cover, '640')}
@@ -563,13 +563,15 @@
 									/>
 								{:else}
 									<div
-										class="flex h-full w-full items-center justify-center bg-[#001100] text-xs text-[#006622] font-mono"
+										class="flex h-full w-full items-center justify-center bg-[#001100] font-mono text-xs text-[#006622]"
 									>
 										[ NO ART ]
 									</div>
 								{/if}
 							</div>
-							<h3 class="truncate font-mono text-sm font-semibold text-[#00ff41] group-hover:matrix-glow transition-all">
+							<h3
+								class="group-hover:matrix-glow truncate font-mono text-sm font-semibold text-[#00ff41] transition-all"
+							>
 								{album.title}
 								{#if album.explicit}
 									<svg
@@ -588,10 +590,12 @@
 								{/if}
 							</h3>
 							{#if album.artist}
-								<p class="truncate text-xs text-[#00b82e] font-mono">{album.artist.name}</p>
+								<p class="truncate font-mono text-xs text-[#00b82e]">{album.artist.name}</p>
 							{/if}
 							{#if album.releaseDate}
-								<p class="text-[10px] text-[#006622] font-mono">{album.releaseDate.split('-')[0]}</p>
+								<p class="font-mono text-[10px] text-[#006622]">
+									{album.releaseDate.split('-')[0]}
+								</p>
 							{/if}
 						</button>
 						{#if albumDownloadStates[album.id]?.downloading}
@@ -618,7 +622,9 @@
 			<div class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
 				{#each artists as artist}
 					<button onclick={() => onArtistSelect?.(artist)} class="group text-center">
-						<div class="relative mb-2 aspect-square overflow-hidden rounded-full border border-[#003311] group-hover:border-[#00ff41] transition-all group-hover:shadow-[0_0_15px_rgba(0,255,65,0.2)]">
+						<div
+							class="relative mb-2 aspect-square overflow-hidden rounded-full border border-[#003311] transition-all group-hover:border-[#00ff41] group-hover:shadow-[0_0_15px_rgba(0,255,65,0.2)]"
+						>
 							{#if artist.picture}
 								<img
 									src={losslessAPI.getArtistPictureUrl(artist.picture)}
@@ -631,10 +637,12 @@
 								</div>
 							{/if}
 						</div>
-						<h3 class="truncate font-mono text-sm font-semibold text-[#00ff41] group-hover:matrix-glow transition-all">
+						<h3
+							class="group-hover:matrix-glow truncate font-mono text-sm font-semibold text-[#00ff41] transition-all"
+						>
 							{artist.name}
 						</h3>
-						<p class="text-[10px] text-[#006622] font-mono uppercase tracking-wider">[ ARTIST ]</p>
+						<p class="font-mono text-[10px] tracking-wider text-[#006622] uppercase">[ ARTIST ]</p>
 					</button>
 				{/each}
 			</div>
@@ -659,31 +667,9 @@
 					</button>
 				{/each}
 			</div>
-			<!-- News Section -->
-		{:else if !query.trim()}
-			<div class="border border-[#003311] bg-[#001100] p-6 mb-32">
-				<h2 class="mb-6 text-2xl font-bold text-[#00ff41] font-['Orbitron'] matrix-glow" style="font-family: 'Orbitron', monospace;">[ NEWS ]</h2>
-				<section class="grid gap-4 text-left">
-					{#each newsItems as item}
-						<article
-							class="flex flex-col gap-3 border border-[#00ff41] bg-black p-6 shadow-[0_0_20px_rgba(0,255,65,0.2)]"
-						>
-							<div class="flex items-center gap-3">
-								<div
-									class="flex h-10 w-10 items-center justify-center border border-[#00ff41] bg-[#001100] text-[#00ff41]"
-								>
-									<Newspaper size={20} />
-								</div>
-								<h3 class="text-lg font-semibold text-[#00ff41] font-mono">{item.title}</h3>
-							</div>
-							<p class="text-sm text-[#00b82e] font-mono">{item.description}</p>
-						</article>
-					{/each}
-				</section>
-			</div>
-		{:else if query.trim() && !isLoading}
-			<div class="py-12 text-center text-[#006622] border border-[#003311] bg-[#001100] p-8">
-				<p class="font-mono uppercase tracking-wider text-sm">[ NO RESULTS FOUND ]</p>
+		{:else if !query.trim()}{:else if query.trim() && !isLoading}
+			<div class="border border-[#003311] bg-[#001100] p-8 py-12 text-center text-[#006622]">
+				<p class="font-mono text-sm tracking-wider uppercase">[ NO RESULTS FOUND ]</p>
 			</div>
 		{/if}
 	{/if}

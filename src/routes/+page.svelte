@@ -1,5 +1,6 @@
 <script lang="ts">
 	import SearchInterface from '$lib/components/SearchInterface.svelte';
+	import DiscoverSection from '$lib/components/DiscoverSection.svelte';
 	import type { Track, Album, Artist, Playlist } from '$lib/types';
 	import { playerStore } from '$lib/stores/player';
 	import { goto } from '$app/navigation';
@@ -31,32 +32,32 @@
 
 <div class="space-y-12 px-4">
 	<!-- Hero Section - Matrix Style -->
-	<div class="py-16 text-center relative">
+	<div class="relative py-12 text-center">
 		<!-- Glitch effect container -->
 		<div class="relative inline-block">
 			<h1
-				class="matrix-glow font-['Orbitron'] text-7xl md:text-8xl font-black tracking-wider mb-6 relative"
+				class="matrix-glow relative mb-4 font-['Orbitron'] text-6xl font-black tracking-wider md:text-7xl"
 				style="font-family: 'Orbitron', monospace;"
 			>
 				<span class="text-[#00ff41]">&gt;</span>
 				<span class="text-[#00ff41]">{data.title}</span>
-				<span class="text-[#00ff41] animate-pulse">_</span>
+				<span class="animate-pulse text-[#00ff41]">_</span>
 			</h1>
 		</div>
 
-		<div class="flex items-center justify-center gap-3 mb-8">
+		<div class="mb-6 flex items-center justify-center gap-3">
 			<div class="h-px w-16 bg-[#00ff41] opacity-50"></div>
-			<p class="text-[#00b82e] text-sm font-mono uppercase tracking-[0.3em]">
+			<p class="font-mono text-sm tracking-[0.3em] text-[#00b82e] uppercase">
 				[ MUSIC FOR EVERYONE ]
 			</p>
 			<div class="h-px w-16 bg-[#00ff41] opacity-50"></div>
 		</div>
 
-
-
 		<!-- Version badge -->
-		<div class="mt-6 inline-block px-4 py-1 border border-[#003311] bg-[#001100] text-[#00b82e] text-xs font-mono">
-			VERSION 1.1.0
+		<div
+			class="inline-block border border-[#003311] bg-[#001100] px-4 py-1 font-mono text-xs text-[#00b82e]"
+		>
+			VERSION 1.2.0
 		</div>
 	</div>
 
@@ -67,4 +68,7 @@
 		onArtistSelect={handleArtistSelect}
 		onPlaylistSelect={handlePlaylistSelect}
 	/>
+
+	<!-- Discover Section -->
+	<DiscoverSection />
 </div>
